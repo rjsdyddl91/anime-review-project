@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 - Anime Review</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo" onclick="location.href='/index.html'">
+        Anime Review
+    </div>
+</header>
+
+<main class="auth-main">
+    <section class="auth-box">
+        <h1>로그인</h1>
+
+        <input type="email" id="loginEmail" placeholder="이메일">
+        <input type="password" id="loginPassword" placeholder="비밀번호">
+
+        <button id="loginBtn" class="auth-btn">로그인</button>
+
+        <div class="auth-links">
+            <a href="/join.html">회원가입</a>
+            <span>|</span>
+            <a href="/find-password.html">비밀번호 찾기</a>
+        </div>
+    </section>
+</main>
+
+<script src="/js/auth.js"></script>
+</body>
+</html>

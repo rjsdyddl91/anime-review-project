@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 - Anime Review</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo" onclick="location.href='/index.html'">
+        Anime Review
+    </div>
+</header>
+
+<main class="auth-main">
+    <section class="auth-box">
+        <h1>회원가입</h1>
+
+        <input type="text" id="joinName" placeholder="이름">
+        <input type="text" id="joinPhone" placeholder="전화번호">
+        <input type="email" id="joinEmail" placeholder="이메일">
+        <input type="password" id="joinPassword" placeholder="비밀번호">
+
+        <button id="joinBtn" class="auth-btn">회원가입</button>
+
+        <div class="auth-links">
+            <a href="/login.html">이미 계정이 있으신가요?</a>
+        </div>
+    </section>
+</main>
+
+<script src="/js/auth.js"></script>
+</body>
+</html>

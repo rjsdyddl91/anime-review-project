@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Anime Detail</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <header class="header">
+
+        <div class="logo" onclick="location.href='/index.html'">
+            Anime Review
+        </div>
+
+        <div class="header-right">
+            <nav class="nav" id="navMenu">
+                <a href="#" onclick="needLogin()">마이페이지</a>
+            </nav>
+
+            <div class="auth-area" id="authArea">
+                <button class="login-btn" onclick="location.href='/login.html'">로그인</button>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="detail-main">
+
+        <button class="back-btn" onclick="location.href='/index.html'">
+            ← 목록으로
+        </button>
+
+        <section class="detail-card">
+
+            <div class="detail-image-box">
+                <img id="detailImage" src="https://placehold.co/350x500" alt="anime">
+            </div>
+
+            <div class="detail-info-box">
+                <div id="detailGenre" class="detail-genre">장르</div>
+
+                <div class="detail-title-row">
+                    <h1 id="detailTitle" class="detail-title">애니 제목</h1>
+
+                    <button id="bookmarkBtn" class="bookmark-btn">
+                        ♡ 북마크
+                    </button>
+                </div>
+
+                <div class="detail-meta">
+                    <span>제작사</span>
+                    <strong id="detailStudio">-</strong>
+                </div>
+
+                <div class="detail-meta">
+                    <span>등록일</span>
+                    <strong id="detailCreatedAt">-</strong>
+                </div>
+
+                <div class="detail-description-box">
+                    <h3>작품 소개</h3>
+                    <p id="detailDescription">
+                        작품 설명이 표시됩니다.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="review-section">
+
+            <div class="review-header">
+                <h2>리뷰</h2>
+                <span id="reviewCount">0개</span>
+            </div>
+
+            <div class="review-write-box">
+                <h3>리뷰 작성</h3>
+
+                <div class="review-form-row">
+                    <label>별점</label>
+
+                    <div class="star-rating" id="starRating">
+                        <span class="star" data-value="1">☆</span>
+                        <span class="star" data-value="2">☆</span>
+                        <span class="star" data-value="3">☆</span>
+                        <span class="star" data-value="4">☆</span>
+                        <span class="star" data-value="5">☆</span>
+                    </div>
+                </div>
+
+                <textarea id="reviewContent" placeholder="로그인 후 리뷰를 작성할 수 있습니다."></textarea>
+
+                <button id="reviewSubmitBtn" class="review-submit-btn">
+                    리뷰 등록
+                </button>
+            </div>
+
+            <div id="reviewList" class="review-list">
+                <!-- 리뷰 목록 JS 출력 -->
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/detail.js"></script>
+</body>
+</html>

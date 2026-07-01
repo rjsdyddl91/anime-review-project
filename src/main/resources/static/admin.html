@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 페이지 - Anime Review</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <!-- =========================
+         상단 메뉴
+    ========================= -->
+    <header class="header">
+
+        <!-- 로고 클릭 시 메인으로 이동 -->
+        <div class="logo" onclick="location.href='/index.html'">
+            Anime Review
+        </div>
+
+        <div class="header-right">
+
+            <!-- 로그인 상태에 따라 common.js에서 변경 -->
+            <nav class="nav" id="navMenu">
+                <a href="#" onclick="needLogin()">마이페이지</a>
+            </nav>
+
+            <!-- 로그인 / 로그아웃 영역 -->
+            <div class="auth-area" id="authArea">
+                <button class="login-btn" onclick="location.href='/login.html'">
+                    로그인
+                </button>
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- =========================
+         관리자 페이지 메인 영역
+    ========================= -->
+    <main class="admin-main">
+
+        <!-- 페이지 제목 -->
+        <section class="admin-title">
+            <h1>관리자 페이지</h1>
+            <p>애니, 회원, 리뷰, 댓글을 관리할 수 있습니다.</p>
+        </section>
+
+        <!-- =========================
+             관리자 탭 메뉴
+        ========================= -->
+        <section class="admin-tab-area">
+
+            <button class="admin-tab-btn active" onclick="showAdminSection('anime')">
+                애니 관리
+            </button>
+
+            <button class="admin-tab-btn" onclick="showAdminSection('member')">
+                회원 관리
+            </button>
+
+            <button class="admin-tab-btn" onclick="showAdminSection('review')">
+                리뷰 관리
+            </button>
+
+            <button class="admin-tab-btn" onclick="showAdminSection('comment')">
+                댓글 관리
+            </button>
+
+        </section>
+
+        <!-- =========================
+             애니 관리 영역
+             기본으로 보이는 영역
+        ========================= -->
+        <section class="admin-section active" id="adminAnimeSection">
+
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <h2>애니 등록 / 수정</h2>
+                    <p>애니 정보를 입력하고 등록하거나 수정할 수 있습니다.</p>
+                </div>
+
+                <!-- 애니 등록 / 수정 폼 -->
+                <form class="admin-form" id="adminAnimeForm">
+
+                    <!-- 수정할 때만 사용되는 숨겨진 애니 ID -->
+                    <input type="hidden" id="adminAnimeId">
+
+                    <div class="admin-form-row">
+
+                        <div class="admin-form-group">
+                            <label for="adminAnimeTitle">제목</label>
+                            <input type="text" id="adminAnimeTitle" placeholder="애니 제목을 입력하세요">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="adminAnimeGenreId">장르</label>
+
+                            <select id="adminAnimeGenreId">
+                                <option value="">장르를 선택하세요</option>
+                                <option value="1">액션</option>
+                                <option value="2">판타지</option>
+                                <option value="3">코미디</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="admin-form-row">
+
+                        <div class="admin-form-group">
+                            <label for="adminAnimeStudio">제작사</label>
+                            <input type="text" id="adminAnimeStudio" placeholder="제작사를 입력하세요">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="adminAnimeImagePath">이미지 경로</label>
+                            <input type="text" id="adminAnimeImagePath" placeholder="이미지 URL 또는 경로를 입력하세요">
+                        </div>
+
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label for="adminAnimeDescription">줄거리</label>
+                        <textarea id="adminAnimeDescription" placeholder="애니 줄거리를 입력하세요"></textarea>
+                    </div>
+
+                    <div class="admin-form-button-area">
+
+                        <button type="submit" class="admin-primary-btn" id="adminAnimeSubmitBtn">
+                            등록
+                        </button>
+
+                        <button type="button" class="admin-secondary-btn" onclick="resetAnimeForm()">
+                            입력 초기화
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <h2>애니 목록</h2>
+                    <p>등록된 애니를 수정하거나 삭제할 수 있습니다.</p>
+                </div>
+
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>이미지</th>
+                                <th>제목</th>
+                                <th>장르 ID</th>
+                                <th>제작사</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="adminAnimeList">
+                            <!-- 애니 목록 JS 출력 -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =========================
+             회원 관리 영역
+        ========================= -->
+        <section class="admin-section" id="adminMemberSection">
+
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <h2>회원 관리</h2>
+                    <p>가입한 회원 목록을 확인하고 삭제할 수 있습니다.</p>
+                </div>
+
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>전화번호</th>
+                                <th>권한</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="adminMemberList">
+                            <!-- 회원 목록 JS 출력 -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =========================
+             리뷰 관리 영역
+        ========================= -->
+        <section class="admin-section" id="adminReviewSection">
+
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <h2>리뷰 관리</h2>
+                    <p>전체 리뷰 목록을 확인하고 삭제할 수 있습니다.</p>
+                </div>
+
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>애니 ID</th>
+                                <th>작성자</th>
+                                <th>별점</th>
+                                <th>내용</th>
+                                <th>작성일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="adminReviewList">
+                            <!-- 리뷰 목록 JS 출력 -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =========================
+             댓글 관리 영역
+        ========================= -->
+        <section class="admin-section" id="adminCommentSection">
+
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <h2>댓글 관리</h2>
+                    <p>전체 댓글 목록을 확인하고 삭제할 수 있습니다.</p>
+                </div>
+
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>리뷰 ID</th>
+                                <th>작성자</th>
+                                <th>내용</th>
+                                <th>작성일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="adminCommentList">
+                            <!-- 댓글 목록 JS 출력 -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

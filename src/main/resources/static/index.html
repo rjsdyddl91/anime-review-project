@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Anime Review</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <!-- =========================
+         상단 메뉴
+    ========================= -->
+    <header class="header">
+
+        <!-- 로고 클릭 시 메인으로 이동 -->
+        <div class="logo" onclick="location.href='/index.html'">
+            Anime Review
+        </div>
+
+        <div class="header-right">
+
+            <!-- 로그인 상태에 따라 common.js에서 변경 -->
+            <nav class="nav" id="navMenu">
+                <a href="#" onclick="needLogin()">마이페이지</a>
+            </nav>
+
+            <!-- 로그인 / 로그아웃 영역 -->
+            <div class="auth-area" id="authArea">
+                <button class="login-btn" onclick="location.href='/login.html'">
+                    로그인
+                </button>
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- =========================
+         메인 영역
+    ========================= -->
+    <main class="main">
+
+        <!-- 제목 -->
+        <section class="main-title">
+            <h1>애니메이션 리뷰</h1>
+            <p>좋아하는 애니를 찾고 리뷰를 남겨보세요.</p>
+        </section>
+
+        <!-- =========================
+             검색창
+        ========================= -->
+        <section class="search-section">
+            <input type="text" id="searchInput" placeholder="애니 제목을 검색하세요">
+            <button id="searchBtn">검색</button>
+        </section>
+
+        <!-- =========================
+             장르 탭
+        ========================= -->
+        <section class="genre-tabs">
+            <button class="genre-btn active" data-genre="all">전체</button>
+            <button class="genre-btn" data-genre="1">액션</button>
+            <button class="genre-btn" data-genre="2">판타지</button>
+            <button class="genre-btn" data-genre="3">코미디</button>
+        </section>
+
+        <!-- =========================
+             애니 목록
+        ========================= -->
+        <section class="anime-grid" id="animeGrid"></section>
+
+    </main>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>
