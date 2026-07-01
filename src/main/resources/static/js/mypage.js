@@ -1,8 +1,30 @@
 // =========================
+// 마이페이지 페이징 변수
+// =========================
+let myBookmarkData = [];
+let myReviewData = [];
+let myCommentData = [];
+
+let myBookmarkPage = 1;
+let myReviewPage = 1;
+let myCommentPage = 1;
+
+const myBookmarkPageSize = 4;
+const myReviewPageSize = 5;
+const myCommentPageSize = 5;
+
+// =========================
+// 비동기 출력 충돌 방지용 번호
+// =========================
+let bookmarkRenderToken = 0;
+let reviewRenderToken = 0;
+
+// =========================
 // 페이지 로딩 시 실행
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
     loadMyPage();
+    initChangePassword();
 });
 
 // =========================
@@ -67,10 +89,13 @@ function loadMyBookmarks() {
     fetch("/bookmark/my")
         .then(response => response.json())
         .then(bookmarkList => {
+            myBookmarkData = bookmarkList;
+            myBookmarkPage = 1;
+
             document.getElementById("myBookmarkCount").textContent =
                 `${bookmarkList.length}개`;
 
-            renderMyBookmarks(bookmarkList);
+            renderMyBookmarks();
         })
         .catch(error => {
             console.error("내 북마크 조회 실패:", error);
@@ -80,24 +105,49 @@ function loadMyBookmarks() {
 // =========================
 // 내 북마크 출력
 // =========================
-function renderMyBookmarks(bookmarkList) {
+function renderMyBookmarks() {
     const myBookmarkList = document.getElementById("myBookmarkList");
 
     myBookmarkList.innerHTML = "";
 
-    if (bookmarkList.length === 0) {
+    bookmarkRenderToken++;
+    const currentToken = bookmarkRenderToken;
+
+    if (myBookmarkData.length === 0) {
         myBookmarkList.innerHTML = `
             <div class="mypage-empty">
                 북마크한 애니가 없습니다.
             </div>
         `;
+
+        renderPagination(
+            myBookmarkData.length,
+            myBookmarkPageSize,
+            myBookmarkPage,
+            "myBookmarkPagination",
+            page => {
+                myBookmarkPage = page;
+                renderMyBookmarks();
+            }
+        );
+
         return;
     }
 
-    bookmarkList.forEach(bookmark => {
+    const pageBookmarkList = getPageItems(
+        myBookmarkData,
+        myBookmarkPage,
+        myBookmarkPageSize
+    );
+
+    pageBookmarkList.forEach(bookmark => {
         fetch(`/anime/${bookmark.animeId}`)
             .then(response => response.json())
             .then(anime => {
+                if (currentToken !== bookmarkRenderToken) {
+                    return;
+                }
+
                 const card = document.createElement("div");
                 card.className = "mypage-anime-card";
 
@@ -126,6 +176,18 @@ function renderMyBookmarks(bookmarkList) {
                 console.error("북마크 애니 정보 조회 실패:", error);
             });
     });
+
+    renderPagination(
+        myBookmarkData.length,
+        myBookmarkPageSize,
+        myBookmarkPage,
+        "myBookmarkPagination",
+        page => {
+            myBookmarkPage = page;
+            renderMyBookmarks();
+            scrollToMyPageSection("myBookmarkList");
+        }
+    );
 }
 
 // =========================
@@ -135,10 +197,13 @@ function loadMyReviews() {
     fetch("/review/my")
         .then(response => response.json())
         .then(reviewList => {
+            myReviewData = reviewList;
+            myReviewPage = 1;
+
             document.getElementById("myReviewCount").textContent =
                 `${reviewList.length}개`;
 
-            renderMyReviews(reviewList);
+            renderMyReviews();
         })
         .catch(error => {
             console.error("내 리뷰 조회 실패:", error);
@@ -148,24 +213,49 @@ function loadMyReviews() {
 // =========================
 // 내 리뷰 출력
 // =========================
-function renderMyReviews(reviewList) {
+function renderMyReviews() {
     const myReviewList = document.getElementById("myReviewList");
 
     myReviewList.innerHTML = "";
 
-    if (reviewList.length === 0) {
+    reviewRenderToken++;
+    const currentToken = reviewRenderToken;
+
+    if (myReviewData.length === 0) {
         myReviewList.innerHTML = `
             <div class="mypage-empty">
                 작성한 리뷰가 없습니다.
             </div>
         `;
+
+        renderPagination(
+            myReviewData.length,
+            myReviewPageSize,
+            myReviewPage,
+            "myReviewPagination",
+            page => {
+                myReviewPage = page;
+                renderMyReviews();
+            }
+        );
+
         return;
     }
 
-    reviewList.forEach(review => {
+    const pageReviewList = getPageItems(
+        myReviewData,
+        myReviewPage,
+        myReviewPageSize
+    );
+
+    pageReviewList.forEach(review => {
         fetch(`/anime/${review.animeId}`)
             .then(response => response.json())
             .then(anime => {
+                if (currentToken !== reviewRenderToken) {
+                    return;
+                }
+
                 const item = document.createElement("div");
                 item.className = "mypage-list-item";
 
@@ -194,6 +284,18 @@ function renderMyReviews(reviewList) {
                 console.error("리뷰 애니 정보 조회 실패:", error);
             });
     });
+
+    renderPagination(
+        myReviewData.length,
+        myReviewPageSize,
+        myReviewPage,
+        "myReviewPagination",
+        page => {
+            myReviewPage = page;
+            renderMyReviews();
+            scrollToMyPageSection("myReviewList");
+        }
+    );
 }
 
 // =========================
@@ -203,10 +305,13 @@ function loadMyComments() {
     fetch("/comment/my")
         .then(response => response.json())
         .then(commentList => {
+            myCommentData = commentList;
+            myCommentPage = 1;
+
             document.getElementById("myCommentCount").textContent =
                 `${commentList.length}개`;
 
-            renderMyComments(commentList);
+            renderMyComments();
         })
         .catch(error => {
             console.error("내 댓글 조회 실패:", error);
@@ -216,21 +321,39 @@ function loadMyComments() {
 // =========================
 // 내 댓글 출력
 // =========================
-function renderMyComments(commentList) {
+function renderMyComments() {
     const myCommentList = document.getElementById("myCommentList");
 
     myCommentList.innerHTML = "";
 
-    if (commentList.length === 0) {
+    if (myCommentData.length === 0) {
         myCommentList.innerHTML = `
             <div class="mypage-empty">
                 작성한 댓글이 없습니다.
             </div>
         `;
+
+        renderPagination(
+            myCommentData.length,
+            myCommentPageSize,
+            myCommentPage,
+            "myCommentPagination",
+            page => {
+                myCommentPage = page;
+                renderMyComments();
+            }
+        );
+
         return;
     }
 
-    commentList.forEach(comment => {
+    const pageCommentList = getPageItems(
+        myCommentData,
+        myCommentPage,
+        myCommentPageSize
+    );
+
+    pageCommentList.forEach(comment => {
         const item = document.createElement("div");
         item.className = "mypage-list-item mypage-comment-item";
 
@@ -247,6 +370,106 @@ function renderMyComments(commentList) {
 
         myCommentList.appendChild(item);
     });
+
+    renderPagination(
+        myCommentData.length,
+        myCommentPageSize,
+        myCommentPage,
+        "myCommentPagination",
+        page => {
+            myCommentPage = page;
+            renderMyComments();
+            scrollToMyPageSection("myCommentList");
+        }
+    );
+}
+
+// =========================
+// 페이지에 맞는 데이터 자르기
+// =========================
+function getPageItems(list, currentPage, pageSize) {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    return list.slice(startIndex, endIndex);
+}
+
+// =========================
+// 페이지 버튼 출력
+// =========================
+function renderPagination(totalCount, pageSize, currentPage, paginationId, onPageChange) {
+    const pagination = document.getElementById(paginationId);
+
+    if (pagination === null) {
+        return;
+    }
+
+    pagination.innerHTML = "";
+
+    const totalPage = Math.ceil(totalCount / pageSize);
+
+    if (totalPage <= 1) {
+        return;
+    }
+
+    // 이전 버튼
+    const prevBtn = document.createElement("button");
+    prevBtn.className = "page-btn";
+    prevBtn.textContent = "이전";
+    prevBtn.disabled = currentPage === 1;
+
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            onPageChange(currentPage - 1);
+        }
+    };
+
+    pagination.appendChild(prevBtn);
+
+    // 숫자 버튼
+    for (let i = 1; i <= totalPage; i++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.className = "page-btn";
+        pageBtn.textContent = i;
+
+        if (i === currentPage) {
+            pageBtn.classList.add("active");
+        }
+
+        pageBtn.onclick = () => {
+            onPageChange(i);
+        };
+
+        pagination.appendChild(pageBtn);
+    }
+
+    // 다음 버튼
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "page-btn";
+    nextBtn.textContent = "다음";
+    nextBtn.disabled = currentPage === totalPage;
+
+    nextBtn.onclick = () => {
+        if (currentPage < totalPage) {
+            onPageChange(currentPage + 1);
+        }
+    };
+
+    pagination.appendChild(nextBtn);
+}
+
+// =========================
+// 페이지 이동 시 해당 영역으로 스크롤
+// =========================
+function scrollToMyPageSection(elementId) {
+    const target = document.getElementById(elementId);
+
+    if (target !== null) {
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
 
 // =========================
@@ -275,6 +498,74 @@ function formatDate(dateText) {
     }
 
     return dateText.substring(0, 10);
+}
+
+// =========================
+// 비밀번호 변경
+// =========================
+function initChangePassword() {
+    const changePasswordBtn = document.getElementById("changePasswordBtn");
+
+    if (changePasswordBtn === null) {
+        return;
+    }
+
+    changePasswordBtn.addEventListener("click", () => {
+        const currentPassword = document.getElementById("currentPassword").value.trim();
+        const newPassword = document.getElementById("newPassword").value.trim();
+        const newPasswordCheck = document.getElementById("newPasswordCheck").value.trim();
+        const resultBox = document.getElementById("passwordChangeResult");
+
+        if (currentPassword === "" || newPassword === "" || newPasswordCheck === "") {
+            alert("비밀번호를 모두 입력해주세요.");
+            return;
+        }
+
+        if (newPassword !== newPasswordCheck) {
+            alert("새 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        fetch("/member/password", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                currentPassword: currentPassword,
+                newPassword: newPassword,
+                newPasswordCheck: newPasswordCheck
+            })
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result === "password changed") {
+                    alert("비밀번호가 변경되었습니다.");
+
+                    document.getElementById("currentPassword").value = "";
+                    document.getElementById("newPassword").value = "";
+                    document.getElementById("newPasswordCheck").value = "";
+
+                    if (resultBox !== null) {
+                        resultBox.textContent = "비밀번호가 변경되었습니다.";
+                        resultBox.classList.remove("error");
+                    }
+
+                    return;
+                }
+
+                if (resultBox !== null) {
+                    resultBox.textContent = result;
+                    resultBox.classList.add("error");
+                }
+
+                alert(result);
+            })
+            .catch(error => {
+                console.error("비밀번호 변경 실패:", error);
+                alert("비밀번호 변경 중 오류가 발생했습니다.");
+            });
+    });
 }
 
 // =========================

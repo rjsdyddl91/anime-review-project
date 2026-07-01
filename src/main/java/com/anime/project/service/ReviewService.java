@@ -18,6 +18,9 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
 
+    // =========================
+    // 리뷰 작성
+    // =========================
     public void insert(Review review, Member loginUser) {
 
         if (loginUser == null) {
@@ -35,13 +38,21 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
+    // =========================
+    // 특정 애니 리뷰 조회
+    // 일반 사용자 화면이므로 작성자 이름 마스킹
+    // =========================
     public List<ReviewResponseDTO> findByAnimeId(Long animeId) {
+
         return reviewRepository.findByAnimeId(animeId)
                 .stream()
-                .map(this::convertToDTO)
+                .map(review -> convertToDTO(review, true))
                 .toList();
     }
 
+    // =========================
+    // 내 리뷰 조회
+    // =========================
     public List<Review> findMyReviews(Member loginUser) {
 
         if (loginUser == null) {
@@ -51,6 +62,9 @@ public class ReviewService {
         return reviewRepository.findByMemberId(loginUser.getMemberId());
     }
 
+    // =========================
+    // 리뷰 수정
+    // =========================
     public void update(Long reviewId, Review updateReview, Member loginUser) {
 
         if (loginUser == null) {
@@ -75,6 +89,9 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
+    // =========================
+    // 리뷰 삭제
+    // =========================
     public void delete(Long reviewId, Member loginUser) {
 
         if (loginUser == null) {
@@ -94,16 +111,22 @@ public class ReviewService {
 
     // =========================
     // 전체 리뷰 조회
+    // 관리자 화면이므로 작성자 이름 원본 표시
     // =========================
     public List<ReviewResponseDTO> findAllReviews() {
 
         return reviewRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(review -> convertToDTO(review, false))
                 .toList();
     }
 
-    private ReviewResponseDTO convertToDTO(Review review) {
+    // =========================
+    // DTO 변환
+    // maskWriterName이 true면 이름 마스킹
+    // maskWriterName이 false면 원본 이름 표시
+    // =========================
+    private ReviewResponseDTO convertToDTO(Review review, boolean maskWriterName) {
 
         ReviewResponseDTO dto = new ReviewResponseDTO();
 
@@ -121,12 +144,19 @@ public class ReviewService {
         if (member == null) {
             dto.setWriterName("알 수 없음");
         } else {
-            dto.setWriterName(maskName(member.getName()));
+            if (maskWriterName) {
+                dto.setWriterName(maskName(member.getName()));
+            } else {
+                dto.setWriterName(member.getName());
+            }
         }
 
         return dto;
     }
 
+    // =========================
+    // 이름 마스킹
+    // =========================
     private String maskName(String name) {
 
         if (name == null || name.isBlank()) {

@@ -72,7 +72,6 @@
 
         <!-- =========================
              애니 관리 영역
-             기본으로 보이는 영역
         ========================= -->
         <section class="admin-section active" id="adminAnimeSection">
 
@@ -106,6 +105,7 @@
                                 <option value="3">코미디</option>
                             </select>
                         </div>
+
                     </div>
 
                     <div class="admin-form-row">
@@ -157,7 +157,7 @@
                                 <th>ID</th>
                                 <th>이미지</th>
                                 <th>제목</th>
-                                <th>장르 ID</th>
+                                <th>장르</th>
                                 <th>제작사</th>
                                 <th>관리</th>
                             </tr>
@@ -168,6 +168,9 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- 애니 목록 페이지 버튼 -->
+                <div class="pagination" id="adminAnimePagination"></div>
 
             </div>
 
@@ -183,6 +186,13 @@
                 <div class="admin-card-header">
                     <h2>회원 관리</h2>
                     <p>가입한 회원 목록을 확인하고 삭제할 수 있습니다.</p>
+                </div>
+
+                <!-- 회원 검색 -->
+                <div class="admin-search-area">
+                    <input type="text"
+                           id="adminMemberSearchInput"
+                           placeholder="이름 / 이메일 / 전화번호 검색">
                 </div>
 
                 <div class="admin-table-wrap">
@@ -204,6 +214,9 @@
                     </table>
                 </div>
 
+                <!-- 회원 목록 페이지 버튼 -->
+                <div class="pagination" id="adminMemberPagination"></div>
+
             </div>
 
         </section>
@@ -218,6 +231,13 @@
                 <div class="admin-card-header">
                     <h2>리뷰 관리</h2>
                     <p>전체 리뷰 목록을 확인하고 삭제할 수 있습니다.</p>
+                </div>
+
+                <!-- 리뷰 검색 -->
+                <div class="admin-search-area">
+                    <input type="text"
+                           id="adminReviewSearchInput"
+                           placeholder="작성자 / 리뷰 내용 검색">
                 </div>
 
                 <div class="admin-table-wrap">
@@ -240,6 +260,9 @@
                     </table>
                 </div>
 
+                <!-- 리뷰 목록 페이지 버튼 -->
+                <div class="pagination" id="adminReviewPagination"></div>
+
             </div>
 
         </section>
@@ -254,6 +277,13 @@
                 <div class="admin-card-header">
                     <h2>댓글 관리</h2>
                     <p>전체 댓글 목록을 확인하고 삭제할 수 있습니다.</p>
+                </div>
+
+                <!-- 댓글 검색 -->
+                <div class="admin-search-area">
+                    <input type="text"
+                           id="adminCommentSearchInput"
+                           placeholder="작성자 / 댓글 내용 검색">
                 </div>
 
                 <div class="admin-table-wrap">
@@ -274,6 +304,9 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- 댓글 목록 페이지 버튼 -->
+                <div class="pagination" id="adminCommentPagination"></div>
 
             </div>
 

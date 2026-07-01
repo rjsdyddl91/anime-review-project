@@ -51,8 +51,22 @@
              검색창
         ========================= -->
         <section class="search-section">
-            <input type="text" id="searchInput" placeholder="애니 제목을 검색하세요">
-            <button id="searchBtn">검색</button>
+
+            <div class="search-box">
+
+                <!-- 검색 입력창 -->
+                <input type="text" id="searchInput" placeholder="애니 제목을 검색하세요">
+
+                <!-- 검색 버튼 -->
+                <button id="searchBtn">검색</button>
+
+                <!-- 검색 자동완성 목록 -->
+                <div class="search-suggestion-box" id="searchSuggestionBox">
+                    <!-- 검색어 입력 시 JS로 자동완성 목록 출력 -->
+                </div>
+
+            </div>
+
         </section>
 
         <!-- =========================
@@ -69,6 +83,11 @@
              애니 목록
         ========================= -->
         <section class="anime-grid" id="animeGrid"></section>
+
+        <!-- =========================
+             페이지 버튼
+        ========================= -->
+        <section class="pagination" id="animePagination"></section>
 
     </main>
 

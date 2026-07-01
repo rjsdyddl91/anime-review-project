@@ -40,17 +40,19 @@ public class CommentService {
 
     // =========================
     // 특정 리뷰 댓글 조회
+    // 일반 사용자 화면이므로 작성자 이름 마스킹
     // =========================
     public List<CommentResponseDTO> findByReviewId(Long reviewId) {
 
         return commentRepository.findByReviewId(reviewId)
                 .stream()
-                .map(this::convertToDTO)
+                .map(comment -> convertToDTO(comment, true))
                 .toList();
     }
 
     // =========================
     // 내 댓글 조회
+    // 일반 사용자 화면이므로 작성자 이름 마스킹
     // =========================
     public List<CommentResponseDTO> findMyComments(Member loginUser) {
 
@@ -60,7 +62,7 @@ public class CommentService {
 
         return commentRepository.findByMemberId(loginUser.getMemberId())
                 .stream()
-                .map(this::convertToDTO)
+                .map(comment -> convertToDTO(comment, true))
                 .toList();
     }
 
@@ -86,20 +88,22 @@ public class CommentService {
 
     // =========================
     // 전체 댓글 조회
+    // 관리자 화면이므로 작성자 이름 원본 표시
     // =========================
     public List<CommentResponseDTO> findAllComments() {
 
         return commentRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(comment -> convertToDTO(comment, false))
                 .toList();
     }
 
-
     // =========================
     // DTO 변환
+    // maskWriterName이 true면 이름 마스킹
+    // maskWriterName이 false면 원본 이름 표시
     // =========================
-    private CommentResponseDTO convertToDTO(Comment comment) {
+    private CommentResponseDTO convertToDTO(Comment comment, boolean maskWriterName) {
 
         CommentResponseDTO dto = new CommentResponseDTO();
 
@@ -115,7 +119,11 @@ public class CommentService {
         if (member == null) {
             dto.setWriterName("알 수 없음");
         } else {
-            dto.setWriterName(maskName(member.getName()));
+            if (maskWriterName) {
+                dto.setWriterName(maskName(member.getName()));
+            } else {
+                dto.setWriterName(member.getName());
+            }
         }
 
         return dto;

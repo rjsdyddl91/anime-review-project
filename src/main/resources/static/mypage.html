@@ -72,6 +72,9 @@
             <div class="mypage-anime-grid" id="myBookmarkList">
                 <!-- 북마크 목록 JS 출력 -->
             </div>
+
+            <!-- 북마크 페이지 버튼 -->
+            <div class="pagination" id="myBookmarkPagination"></div>
         </section>
 
         <!-- =========================
@@ -86,6 +89,9 @@
             <div class="mypage-list" id="myReviewList">
                 <!-- 리뷰 목록 JS 출력 -->
             </div>
+
+            <!-- 리뷰 페이지 버튼 -->
+            <div class="pagination" id="myReviewPagination"></div>
         </section>
 
         <!-- =========================
@@ -99,6 +105,39 @@
 
             <div class="mypage-list" id="myCommentList">
                 <!-- 댓글 목록 JS 출력 -->
+            </div>
+
+            <!-- 댓글 페이지 버튼 -->
+            <div class="pagination" id="myCommentPagination"></div>
+        </section>
+
+        <!-- =========================
+             비밀번호 변경
+        ========================= -->
+        <section class="mypage-card">
+            <div class="mypage-card-header">
+                <h2>비밀번호 변경</h2>
+            </div>
+
+            <div class="mypage-password-form">
+
+                <!-- 현재 비밀번호 -->
+                <input type="password" id="currentPassword" placeholder="현재 비밀번호">
+
+                <!-- 새 비밀번호 -->
+                <input type="password" id="newPassword" placeholder="새 비밀번호">
+
+                <!-- 새 비밀번호 확인 -->
+                <input type="password" id="newPasswordCheck" placeholder="새 비밀번호 확인">
+
+                <!-- 비밀번호 변경 버튼 -->
+                <button type="button" id="changePasswordBtn" class="auth-btn">
+                    비밀번호 변경
+                </button>
+
+                <!-- 결과 메시지 -->
+                <div id="passwordChangeResult" class="find-result"></div>
+
             </div>
         </section>
 

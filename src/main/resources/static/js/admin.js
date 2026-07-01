@@ -4,13 +4,42 @@
 let currentAdminUser = null;
 
 // =========================
+// 관리자 목록 데이터
+// =========================
+let adminAnimeData = [];
+let adminMemberData = [];
+let adminReviewData = [];
+let adminCommentData = [];
+// =========================
+// 관리자 검색어
+// =========================
+let adminMemberSearchKeyword = "";
+let adminReviewSearchKeyword = "";
+let adminCommentSearchKeyword = "";
+
+// =========================
+// 관리자 페이지 번호
+// =========================
+let adminAnimePage = 1;
+let adminMemberPage = 1;
+let adminReviewPage = 1;
+let adminCommentPage = 1;
+
+// =========================
+// 관리자 페이지당 출력 개수
+// =========================
+const adminPageSize = 10;
+
+// =========================
 // 페이지 로딩 시 실행
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
     checkAdminUser();
     initAnimeForm();
+    initMemberSearch();
+    initReviewSearch();
+    initCommentSearch();
 });
-
 // =========================
 // 관리자 권한 확인
 // =========================
@@ -105,13 +134,70 @@ function initAnimeForm() {
 }
 
 // =========================
+// 회원 검색 초기 설정
+// =========================
+function initMemberSearch() {
+    const adminMemberSearchInput = document.getElementById("adminMemberSearchInput");
+
+    if (adminMemberSearchInput === null) {
+        return;
+    }
+
+    adminMemberSearchInput.addEventListener("input", () => {
+        adminMemberSearchKeyword = adminMemberSearchInput.value.trim().toLowerCase();
+        adminMemberPage = 1;
+
+        renderAdminMemberList();
+    });
+}
+
+// =========================
+// 리뷰 검색 초기 설정
+// =========================
+function initReviewSearch() {
+    const adminReviewSearchInput = document.getElementById("adminReviewSearchInput");
+
+    if (adminReviewSearchInput === null) {
+        return;
+    }
+
+    adminReviewSearchInput.addEventListener("input", () => {
+        adminReviewSearchKeyword = adminReviewSearchInput.value.trim().toLowerCase();
+        adminReviewPage = 1;
+
+        renderAdminReviewList();
+    });
+}
+
+// =========================
+// 댓글 검색 초기 설정
+// =========================
+function initCommentSearch() {
+    const adminCommentSearchInput = document.getElementById("adminCommentSearchInput");
+
+    if (adminCommentSearchInput === null) {
+        return;
+    }
+
+    adminCommentSearchInput.addEventListener("input", () => {
+        adminCommentSearchKeyword = adminCommentSearchInput.value.trim().toLowerCase();
+        adminCommentPage = 1;
+
+        renderAdminCommentList();
+    });
+}
+
+// =========================
 // 애니 목록 조회
 // =========================
 function loadAdminAnimeList() {
     fetch("/anime")
         .then(response => response.json())
         .then(animeList => {
-            renderAdminAnimeList(animeList);
+            adminAnimeData = animeList;
+            adminAnimePage = 1;
+
+            renderAdminAnimeList();
         })
         .catch(error => {
             console.error("애니 목록 조회 실패:", error);
@@ -121,21 +207,39 @@ function loadAdminAnimeList() {
 // =========================
 // 애니 목록 출력
 // =========================
-function renderAdminAnimeList(animeList) {
+function renderAdminAnimeList() {
     const adminAnimeList = document.getElementById("adminAnimeList");
 
     adminAnimeList.innerHTML = "";
 
-    if (animeList.length === 0) {
+    if (adminAnimeData.length === 0) {
         adminAnimeList.innerHTML = `
             <tr>
                 <td colspan="6">등록된 애니가 없습니다.</td>
             </tr>
         `;
+
+        renderAdminPagination(
+            adminAnimeData.length,
+            adminPageSize,
+            adminAnimePage,
+            "adminAnimePagination",
+            page => {
+                adminAnimePage = page;
+                renderAdminAnimeList();
+            }
+        );
+
         return;
     }
 
-    animeList.forEach(anime => {
+    const pageAnimeList = getPageItems(
+        adminAnimeData,
+        adminAnimePage,
+        adminPageSize
+    );
+
+    pageAnimeList.forEach(anime => {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
@@ -166,6 +270,18 @@ function renderAdminAnimeList(animeList) {
 
         adminAnimeList.appendChild(tr);
     });
+
+    renderAdminPagination(
+        adminAnimeData.length,
+        adminPageSize,
+        adminAnimePage,
+        "adminAnimePagination",
+        page => {
+            adminAnimePage = page;
+            renderAdminAnimeList();
+            scrollToAdminSection("adminAnimeList");
+        }
+    );
 }
 
 // =========================
@@ -357,7 +473,10 @@ function loadAdminMemberList() {
                 return;
             }
 
-            renderAdminMemberList(memberList);
+            adminMemberData = memberList;
+            adminMemberPage = 1;
+
+            renderAdminMemberList();
         })
         .catch(error => {
             console.error("회원 목록 조회 실패:", error);
@@ -367,21 +486,41 @@ function loadAdminMemberList() {
 // =========================
 // 회원 목록 출력
 // =========================
-function renderAdminMemberList(memberList) {
+function renderAdminMemberList() {
     const adminMemberList = document.getElementById("adminMemberList");
 
     adminMemberList.innerHTML = "";
 
-    if (memberList.length === 0) {
+    const filteredMemberList = getFilteredMemberList();
+
+    if (filteredMemberList.length === 0) {
         adminMemberList.innerHTML = `
             <tr>
-                <td colspan="6">가입한 회원이 없습니다.</td>
+                <td colspan="6">검색 결과가 없습니다.</td>
             </tr>
         `;
+
+        renderAdminPagination(
+            filteredMemberList.length,
+            adminPageSize,
+            adminMemberPage,
+            "adminMemberPagination",
+            page => {
+                adminMemberPage = page;
+                renderAdminMemberList();
+            }
+        );
+
         return;
     }
 
-    memberList.forEach(member => {
+    const pageMemberList = getPageItems(
+        filteredMemberList,
+        adminMemberPage,
+        adminPageSize
+    );
+
+    pageMemberList.forEach(member => {
         const tr = document.createElement("tr");
 
         let deleteButton = `
@@ -407,6 +546,37 @@ function renderAdminMemberList(memberList) {
         `;
 
         adminMemberList.appendChild(tr);
+    });
+
+    renderAdminPagination(
+        filteredMemberList.length,
+        adminPageSize,
+        adminMemberPage,
+        "adminMemberPagination",
+        page => {
+            adminMemberPage = page;
+            renderAdminMemberList();
+            scrollToAdminSection("adminMemberList");
+        }
+    );
+}
+
+// =========================
+// 회원 검색 필터
+// =========================
+function getFilteredMemberList() {
+    if (adminMemberSearchKeyword === "") {
+        return adminMemberData;
+    }
+
+    return adminMemberData.filter(member => {
+        const name = String(member.name || "").toLowerCase();
+        const email = String(member.email || "").toLowerCase();
+        const phone = String(member.phone || "").toLowerCase();
+
+        return name.includes(adminMemberSearchKeyword)
+            || email.includes(adminMemberSearchKeyword)
+            || phone.includes(adminMemberSearchKeyword);
     });
 }
 
@@ -448,7 +618,10 @@ function loadAdminReviewList() {
                 return;
             }
 
-            renderAdminReviewList(reviewList);
+            adminReviewData = reviewList;
+            adminReviewPage = 1;
+
+            renderAdminReviewList();
         })
         .catch(error => {
             console.error("리뷰 목록 조회 실패:", error);
@@ -458,21 +631,41 @@ function loadAdminReviewList() {
 // =========================
 // 리뷰 목록 출력
 // =========================
-function renderAdminReviewList(reviewList) {
+function renderAdminReviewList() {
     const adminReviewList = document.getElementById("adminReviewList");
 
     adminReviewList.innerHTML = "";
 
-    if (reviewList.length === 0) {
+    const filteredReviewList = getFilteredReviewList();
+
+    if (filteredReviewList.length === 0) {
         adminReviewList.innerHTML = `
             <tr>
-                <td colspan="7">작성된 리뷰가 없습니다.</td>
+                <td colspan="7">검색 결과가 없습니다.</td>
             </tr>
         `;
+
+        renderAdminPagination(
+            filteredReviewList.length,
+            adminPageSize,
+            adminReviewPage,
+            "adminReviewPagination",
+            page => {
+                adminReviewPage = page;
+                renderAdminReviewList();
+            }
+        );
+
         return;
     }
 
-    reviewList.forEach(review => {
+    const pageReviewList = getPageItems(
+        filteredReviewList,
+        adminReviewPage,
+        adminPageSize
+    );
+
+    pageReviewList.forEach(review => {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
@@ -492,6 +685,35 @@ function renderAdminReviewList(reviewList) {
         `;
 
         adminReviewList.appendChild(tr);
+    });
+
+    renderAdminPagination(
+        filteredReviewList.length,
+        adminPageSize,
+        adminReviewPage,
+        "adminReviewPagination",
+        page => {
+            adminReviewPage = page;
+            renderAdminReviewList();
+            scrollToAdminSection("adminReviewList");
+        }
+    );
+}
+
+// =========================
+// 리뷰 검색 필터
+// =========================
+function getFilteredReviewList() {
+    if (adminReviewSearchKeyword === "") {
+        return adminReviewData;
+    }
+
+    return adminReviewData.filter(review => {
+        const writerName = String(review.writerName || "").toLowerCase();
+        const content = String(review.content || "").toLowerCase();
+
+        return writerName.includes(adminReviewSearchKeyword)
+            || content.includes(adminReviewSearchKeyword);
     });
 }
 
@@ -533,31 +755,54 @@ function loadAdminCommentList() {
                 return;
             }
 
-            renderAdminCommentList(commentList);
+            adminCommentData = commentList;
+            adminCommentPage = 1;
+
+            renderAdminCommentList();
         })
         .catch(error => {
             console.error("댓글 목록 조회 실패:", error);
         });
 }
 
-// =========================
+/// =========================
 // 댓글 목록 출력
 // =========================
-function renderAdminCommentList(commentList) {
+function renderAdminCommentList() {
     const adminCommentList = document.getElementById("adminCommentList");
 
     adminCommentList.innerHTML = "";
 
-    if (commentList.length === 0) {
+    const filteredCommentList = getFilteredCommentList();
+
+    if (filteredCommentList.length === 0) {
         adminCommentList.innerHTML = `
             <tr>
-                <td colspan="6">작성된 댓글이 없습니다.</td>
+                <td colspan="6">검색 결과가 없습니다.</td>
             </tr>
         `;
+
+        renderAdminPagination(
+            filteredCommentList.length,
+            adminPageSize,
+            adminCommentPage,
+            "adminCommentPagination",
+            page => {
+                adminCommentPage = page;
+                renderAdminCommentList();
+            }
+        );
+
         return;
     }
 
-    commentList.forEach(comment => {
+    const pageCommentList = getPageItems(
+        filteredCommentList,
+        adminCommentPage,
+        adminPageSize
+    );
+
+    pageCommentList.forEach(comment => {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
@@ -576,6 +821,34 @@ function renderAdminCommentList(commentList) {
         `;
 
         adminCommentList.appendChild(tr);
+    });
+
+    renderAdminPagination(
+        filteredCommentList.length,
+        adminPageSize,
+        adminCommentPage,
+        "adminCommentPagination",
+        page => {
+            adminCommentPage = page;
+            renderAdminCommentList();
+            scrollToAdminSection("adminCommentList");
+        }
+    );
+}
+// =========================
+// 댓글 검색 필터
+// =========================
+function getFilteredCommentList() {
+    if (adminCommentSearchKeyword === "") {
+        return adminCommentData;
+    }
+
+    return adminCommentData.filter(comment => {
+        const writerName = String(comment.writerName || "").toLowerCase();
+        const content = String(comment.content || "").toLowerCase();
+
+        return writerName.includes(adminCommentSearchKeyword)
+            || content.includes(adminCommentSearchKeyword);
     });
 }
 
@@ -603,6 +876,94 @@ function deleteComment(commentId) {
             console.error("댓글 삭제 실패:", error);
             alert("댓글 삭제 중 오류가 발생했습니다.");
         });
+}
+
+// =========================
+// 페이지에 맞는 데이터 자르기
+// =========================
+function getPageItems(list, currentPage, pageSize) {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    return list.slice(startIndex, endIndex);
+}
+
+// =========================
+// 관리자 페이지 버튼 출력
+// =========================
+function renderAdminPagination(totalCount, pageSize, currentPage, paginationId, onPageChange) {
+    const pagination = document.getElementById(paginationId);
+
+    if (pagination === null) {
+        return;
+    }
+
+    pagination.innerHTML = "";
+
+    const totalPage = Math.ceil(totalCount / pageSize);
+
+    if (totalPage <= 1) {
+        return;
+    }
+
+    // 이전 버튼
+    const prevBtn = document.createElement("button");
+    prevBtn.className = "page-btn";
+    prevBtn.textContent = "이전";
+    prevBtn.disabled = currentPage === 1;
+
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            onPageChange(currentPage - 1);
+        }
+    };
+
+    pagination.appendChild(prevBtn);
+
+    // 숫자 버튼
+    for (let i = 1; i <= totalPage; i++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.className = "page-btn";
+        pageBtn.textContent = i;
+
+        if (i === currentPage) {
+            pageBtn.classList.add("active");
+        }
+
+        pageBtn.onclick = () => {
+            onPageChange(i);
+        };
+
+        pagination.appendChild(pageBtn);
+    }
+
+    // 다음 버튼
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "page-btn";
+    nextBtn.textContent = "다음";
+    nextBtn.disabled = currentPage === totalPage;
+
+    nextBtn.onclick = () => {
+        if (currentPage < totalPage) {
+            onPageChange(currentPage + 1);
+        }
+    };
+
+    pagination.appendChild(nextBtn);
+}
+
+// =========================
+// 페이지 이동 시 해당 목록으로 스크롤
+// =========================
+function scrollToAdminSection(elementId) {
+    const target = document.getElementById(elementId);
+
+    if (target !== null) {
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
 
 // =========================

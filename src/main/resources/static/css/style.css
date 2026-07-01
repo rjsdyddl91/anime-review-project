@@ -1464,3 +1464,194 @@ button {
         width: 100%;
     }
 }
+
+/* =========================
+   인증 페이지 안내 문구
+========================= */
+
+.auth-description {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+/* =========================
+   마이페이지 - 비밀번호 변경
+========================= */
+
+.mypage-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mypage-password-form input {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 13px 14px;
+    font-size: 14px;
+    font-family: Arial, "맑은 고딕", sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.mypage-password-form input:focus {
+    border-color: #ff8fb0;
+    box-shadow: 0 0 0 3px rgba(255, 92, 138, 0.12);
+}
+
+/* =========================
+   검색 자동완성
+========================= */
+
+.search-box {
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+}
+
+.search-box input {
+    flex: 1;
+}
+
+.search-suggestion-box {
+    display: none;
+    position: absolute;
+    top: 52px;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.search-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-suggestion-item:hover {
+    background-color: #fff1f5;
+}
+
+.search-suggestion-item img {
+    width: 45px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+}
+
+.search-suggestion-info {
+    flex: 1;
+}
+
+.search-suggestion-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.search-suggestion-sub {
+    font-size: 13px;
+    color: #888;
+}
+
+.search-suggestion-empty {
+    padding: 16px;
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+}
+
+/* =========================
+   페이지 버튼
+========================= */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 36px 0 10px;
+}
+
+.page-btn {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #555;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.page-btn:hover {
+    background-color: #fff1f5;
+    border-color: #ff8fb0;
+    color: #ff5c8a;
+}
+
+.page-btn.active {
+    background-color: #ff5c8a;
+    border-color: #ff5c8a;
+    color: white;
+}
+
+.page-btn:disabled {
+    background-color: #f1f1f1;
+    color: #aaa;
+    cursor: default;
+    border-color: #e0e0e0;
+}
+
+.page-btn:disabled:hover {
+    background-color: #f1f1f1;
+    color: #aaa;
+    border-color: #e0e0e0;
+}
+
+/* =========================
+   관리자 검색창
+========================= */
+.admin-search-area {
+    margin: 18px 0 20px;
+}
+
+.admin-search-area input {
+    width: 340px;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid #e6dfe5;
+    border-radius: 24px;
+    background-color: white;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.admin-search-area input::placeholder {
+    color: #aaa;
+}
+
+.admin-search-area input:focus {
+    border-color: #ff5c8a;
+    box-shadow: 0 0 0 4px rgba(255, 92, 138, 0.12);
+}
