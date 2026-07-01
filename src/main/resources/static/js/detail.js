@@ -72,6 +72,12 @@ function renderAnimeDetail(anime) {
     document.getElementById("detailStudio").textContent = anime.studio;
     document.getElementById("detailDescription").textContent = anime.description;
     document.getElementById("detailCreatedAt").textContent = formatDate(anime.createdAt);
+
+    const detailRating = document.getElementById("detailRating");
+
+    if (detailRating !== null) {
+        detailRating.textContent = getAnimeRatingText(anime);
+    }
 }
 
 // =========================
@@ -194,87 +200,88 @@ function renderReviewList(reviewList) {
 // 리뷰 보기 화면 HTML 생성
 // =========================
 function createReviewViewHtml(review) {
-let actionButtons = "";
+    let actionButtons = "";
 
-if (currentLoginUser !== null) {
+    if (currentLoginUser !== null) {
 
-    // =========================
-    // 본인 리뷰: 수정 / 삭제 가능
-    // =========================
-    if (currentLoginUser.memberId === review.memberId) {
-        actionButtons += `
-            <button class="review-action-btn edit-btn"
-                    onclick="showReviewEditForm(${review.reviewId}, ${review.rating}, '${escapeForAttribute(review.content)}')">
-                수정
-            </button>
+        // =========================
+        // 본인 리뷰: 수정 / 삭제 가능
+        // =========================
+        if (currentLoginUser.memberId === review.memberId) {
+            actionButtons += `
+                <button class="review-action-btn edit-btn"
+                        onclick="showReviewEditForm(${review.reviewId}, ${review.rating}, '${escapeForAttribute(review.content)}')">
+                    수정
+                </button>
 
-            <button class="review-action-btn delete-btn"
-                    onclick="deleteReview(${review.reviewId})">
-                삭제
-            </button>
-        `;
+                <button class="review-action-btn delete-btn"
+                        onclick="deleteReview(${review.reviewId})">
+                    삭제
+                </button>
+            `;
+        }
+
+        // =========================
+        // 관리자: 삭제만 가능
+        // =========================
+        else if (currentLoginUser.role === "ADMIN") {
+            actionButtons += `
+                <button class="review-action-btn delete-btn"
+                        onclick="deleteReview(${review.reviewId})">
+                    삭제
+                </button>
+            `;
+        }
     }
 
-    // =========================
-    // 관리자: 삭제만 가능
-    // =========================
-    else if (currentLoginUser.role === "ADMIN") {
-        actionButtons += `
-            <button class="review-action-btn delete-btn"
-                    onclick="deleteReview(${review.reviewId})">
-                삭제
-            </button>
-        `;
-    }
-}
-return `
-    <div class="review-item-top">
-        <div class="review-rating">${ratingToStars(review.rating)}</div>
-        <div class="review-date">${formatDate(review.createdAt)}</div>
-    </div>
-
-    <div class="review-content">
-        ${escapeHtml(review.content)}
-    </div>
-
-    <div class="review-writer">
-        작성자: ${review.writerName || "알 수 없음"}
-    </div>
-
-    <div class="review-footer">
-        <div class="review-like-area">
-            <button class="review-like-btn"
-                    id="likeBtn-${review.reviewId}"
-                    onclick="toggleReviewLike(${review.reviewId})">
-                👍 0
-            </button>
+    return `
+        <div class="review-item-top">
+            <div class="review-rating">${ratingToStars(review.rating)}</div>
+            <div class="review-date">${formatDate(review.createdAt)}</div>
         </div>
 
-        <div class="review-actions">
-            ${actionButtons}
-        </div>
-    </div>
-
-    <div class="comment-section">
-        <div class="comment-header" id="commentHeader-${review.reviewId}">
-            댓글 0개
+        <div class="review-content">
+            ${escapeHtml(review.content)}
         </div>
 
-        <div class="comment-write-box">
-            <input type="text"
-                   id="commentInput-${review.reviewId}"
-                   placeholder="댓글을 입력하세요.">
-
-            <button onclick="insertComment(${review.reviewId})">
-                등록
-            </button>
+        <div class="review-writer">
+            작성자: ${review.writerName || "알 수 없음"}
         </div>
 
-        <div class="comment-list" id="commentList-${review.reviewId}">
-            <!-- 댓글 목록 JS 출력 -->
+        <div class="review-footer">
+            <div class="review-like-area">
+                <button class="review-like-btn"
+                        id="likeBtn-${review.reviewId}"
+                        onclick="toggleReviewLike(${review.reviewId})">
+                    👍 0
+                </button>
+            </div>
+
+            <div class="review-actions">
+                ${actionButtons}
+            </div>
         </div>
-    </div>
-`;
+
+        <div class="comment-section">
+            <div class="comment-header" id="commentHeader-${review.reviewId}">
+                댓글 0개
+            </div>
+
+            <div class="comment-write-box">
+                <input type="text"
+                       id="commentInput-${review.reviewId}"
+                       placeholder="댓글을 입력하세요.">
+
+                <button onclick="insertComment(${review.reviewId})">
+                    등록
+                </button>
+            </div>
+
+            <div class="comment-list" id="commentList-${review.reviewId}">
+                <!-- 댓글 목록 JS 출력 -->
+            </div>
+        </div>
+    `;
 }
 
 // =========================
@@ -316,6 +323,8 @@ function initReviewSubmit() {
                     document.getElementById("reviewContent").value = "";
                     selectedRating = 5;
                     fillStars(selectedRating);
+
+                    loadAnimeDetail(currentAnimeId);
                     loadReviewList(currentAnimeId);
                     return;
                 }
@@ -486,6 +495,8 @@ function updateReview(reviewId) {
         .then(result => {
             if (result === "review updated") {
                 alert("리뷰가 수정되었습니다.");
+
+                loadAnimeDetail(currentAnimeId);
                 loadReviewList(currentAnimeId);
                 return;
             }
@@ -513,6 +524,8 @@ function deleteReview(reviewId) {
         .then(result => {
             if (result === "review deleted") {
                 alert("리뷰가 삭제되었습니다.");
+
+                loadAnimeDetail(currentAnimeId);
                 loadReviewList(currentAnimeId);
                 return;
             }
@@ -607,6 +620,20 @@ function ratingToStars(rating) {
 }
 
 // =========================
+// 평균 별점 문구 생성
+// =========================
+function getAnimeRatingText(anime) {
+    const reviewCount = Number(anime.reviewCount || 0);
+    const averageRating = Number(anime.averageRating || 0);
+
+    if (reviewCount === 0) {
+        return "⭐ 아직 리뷰 없음";
+    }
+
+    return `⭐ ${averageRating.toFixed(1)} / 리뷰 ${reviewCount}개`;
+}
+
+// =========================
 // 장르명 변환
 // =========================
 function genreIdToName(genreId) {
@@ -644,7 +671,7 @@ function escapeHtml(text) {
         return "";
     }
 
-    return text
+    return String(text)
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
@@ -660,7 +687,7 @@ function escapeForAttribute(text) {
         return "";
     }
 
-    return text
+    return String(text)
         .replaceAll("\\", "\\\\")
         .replaceAll("'", "\\'")
         .replaceAll('"', "&quot;")

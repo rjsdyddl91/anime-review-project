@@ -1655,3 +1655,71 @@ button {
     border-color: #ff5c8a;
     box-shadow: 0 0 0 4px rgba(255, 92, 138, 0.12);
 }
+
+/* =========================
+   애니 카드 평균 별점
+========================= */
+
+.anime-rating {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 10px;
+    background-color: #fff7e6;
+    color: #f39c12;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* =========================
+   상세페이지 평균 별점
+========================= */
+
+.detail-rating {
+    display: inline-block;
+    margin: 4px 0 18px;
+    padding: 8px 14px;
+    background-color: #fff7e6;
+    color: #f39c12;
+    border-radius: 22px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* =========================
+   메인 정렬 버튼
+========================= */
+
+.sort-tabs {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    max-width: 1100px;
+    margin: 0 auto 24px;
+    padding: 0 10px;
+}
+
+.sort-btn {
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #666;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sort-btn:hover {
+    background-color: #fff1f5;
+    border-color: #ff8fb0;
+    color: #ff5c8a;
+}
+
+.sort-btn.active {
+    background-color: #ff5c8a;
+    border-color: #ff5c8a;
+    color: white;
+}

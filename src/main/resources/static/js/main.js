@@ -6,14 +6,24 @@ let searchSuggestionTimer = null;
 // =========================
 // 메인 애니 목록 페이징 변수
 // =========================
+let originalAnimeList = [];
 let currentAnimeList = [];
 let currentPage = 1;
 const animePageSize = 8;
+
+// =========================
+// 정렬 기준
+// default : 기본순
+// rating  : 별점순
+// review  : 리뷰 많은 순
+// =========================
+let currentSortType = "default";
 
 document.addEventListener("DOMContentLoaded", () => {
     loadAnimeList();
     initGenreButtons();
     initSearch();
+    initSortButtons();
 });
 
 // =========================
@@ -163,7 +173,10 @@ function hideSearchSuggestions() {
 // 애니 목록 저장 후 첫 페이지 출력
 // =========================
 function renderAnimeList(animeList) {
-    currentAnimeList = animeList;
+    originalAnimeList = [...animeList];
+
+    applyCurrentSort();
+
     currentPage = 1;
 
     renderCurrentAnimePage();
@@ -212,6 +225,10 @@ function renderCurrentAnimePage() {
 
                 <div class="anime-studio">
                     ${escapeHtml(anime.studio)}
+                </div>
+
+                <div class="anime-rating">
+                    ${getAnimeRatingText(anime)}
                 </div>
             </div>
         `;
@@ -332,6 +349,70 @@ function initGenreButtons() {
 }
 
 // =========================
+// 정렬 버튼 이벤트
+// =========================
+function initSortButtons() {
+    const sortButtons = document.querySelectorAll(".sort-btn");
+
+    sortButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            sortButtons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            currentSortType = button.dataset.sort;
+            currentPage = 1;
+
+            applyCurrentSort();
+            renderCurrentAnimePage();
+            scrollToAnimeList();
+        });
+    });
+}
+
+// =========================
+// 현재 정렬 기준 적용
+// =========================
+function applyCurrentSort() {
+    currentAnimeList = [...originalAnimeList];
+
+    if (currentSortType === "rating") {
+        currentAnimeList.sort((a, b) => {
+            const ratingA = Number(a.averageRating || 0);
+            const ratingB = Number(b.averageRating || 0);
+
+            const reviewCountA = Number(a.reviewCount || 0);
+            const reviewCountB = Number(b.reviewCount || 0);
+
+            if (ratingB !== ratingA) {
+                return ratingB - ratingA;
+            }
+
+            return reviewCountB - reviewCountA;
+        });
+
+        return;
+    }
+
+    if (currentSortType === "review") {
+        currentAnimeList.sort((a, b) => {
+            const reviewCountA = Number(a.reviewCount || 0);
+            const reviewCountB = Number(b.reviewCount || 0);
+
+            const ratingA = Number(a.averageRating || 0);
+            const ratingB = Number(b.averageRating || 0);
+
+            if (reviewCountB !== reviewCountA) {
+                return reviewCountB - reviewCountA;
+            }
+
+            return ratingB - ratingA;
+        });
+
+        return;
+    }
+}
+
+// =========================
 // 검색 이벤트
 // =========================
 function initSearch() {
@@ -398,6 +479,20 @@ function initSearch() {
             event.stopPropagation();
         });
     }
+}
+
+// =========================
+// 평균 별점 문구 생성
+// =========================
+function getAnimeRatingText(anime) {
+    const reviewCount = Number(anime.reviewCount || 0);
+    const averageRating = Number(anime.averageRating || 0);
+
+    if (reviewCount === 0) {
+        return "⭐ 아직 리뷰 없음";
+    }
+
+    return `⭐ ${averageRating.toFixed(1)} / 리뷰 ${reviewCount}개`;
 }
 
 // =========================

@@ -33,4 +33,18 @@ public class Anime {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    // =========================
+    // 평균 별점
+    // DB 컬럼이 아니라 화면 출력용 임시 필드
+    // =========================
+    @Transient
+    private Double averageRating;
+
+    // =========================
+    // 리뷰 개수
+    // DB 컬럼이 아니라 화면 출력용 임시 필드
+    // =========================
+    @Transient
+    private long reviewCount;
 }
