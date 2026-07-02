@@ -93,7 +93,7 @@ public class MemberController {
 
         if (authCode == null || authCode.trim().isEmpty()) {
             return "인증코드를 입력해주세요.";
-        }
+        }   
 
         if (savedEmail == null || savedCode == null || savedTime == null) {
             return "인증코드를 먼저 발송해주세요.";

@@ -1723,3 +1723,86 @@ button {
     border-color: #ff5c8a;
     color: white;
 }
+
+/* =========================
+   관리자 테이블 컬럼 너비
+========================= */
+
+.admin-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* 공통 */
+.admin-table .col-no {
+    width: 70px;
+    text-align: center;
+}
+
+.admin-table .col-action {
+    width: 130px;
+    text-align: center;
+}
+
+.admin-table .col-date {
+    width: 120px;
+    text-align: center;
+}
+
+.admin-table .col-rating {
+    width: 100px;
+    text-align: center;
+}
+
+.admin-table .col-writer,
+.admin-table .col-name {
+    width: 130px;
+    text-align: center;
+}
+
+.admin-table .col-role {
+    width: 100px;
+    text-align: center;
+}
+
+.admin-table .col-phone {
+    width: 150px;
+    text-align: center;
+}
+
+.admin-table .col-image {
+    width: 100px;
+    text-align: center;
+}
+
+.admin-table .col-genre {
+    width: 100px;
+    text-align: center;
+}
+
+.admin-table .col-studio {
+    width: 160px;
+}
+
+.admin-table .col-title {
+    width: 220px;
+}
+
+/* 회원 이메일은 길 수 있어서 넓게 */
+.admin-member-table .col-email {
+    width: 260px;
+}
+
+/* 리뷰/댓글 내용 칸은 가장 넓게 */
+.admin-review-table .col-content,
+.admin-comment-table .col-content {
+    width: auto;
+}
+
+/* 긴 내용 말줄임 처리 */
+.admin-content-cell {
+    max-width: 420px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

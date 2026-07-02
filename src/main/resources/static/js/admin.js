@@ -239,23 +239,24 @@ function renderAdminAnimeList() {
         adminPageSize
     );
 
-    pageAnimeList.forEach(anime => {
+    pageAnimeList.forEach((anime, index) => {
         const tr = document.createElement("tr");
+        const rowNumber = getRowNumber(adminAnimePage, index);
 
         tr.innerHTML = `
-            <td>${anime.animeId}</td>
+            <td class="col-no">${rowNumber}</td>
 
-            <td>
+            <td class="col-image">
                 <img class="admin-thumb"
                      src="${anime.imagePath || 'https://placehold.co/80x100'}"
                      alt="${escapeHtml(anime.title)}">
             </td>
 
-            <td>${escapeHtml(anime.title)}</td>
-            <td>${genreIdToName(anime.genreId)}</td>
-            <td>${escapeHtml(anime.studio)}</td>
+            <td class="col-title">${escapeHtml(anime.title)}</td>
+            <td class="col-genre">${genreIdToName(anime.genreId)}</td>
+            <td class="col-studio">${escapeHtml(anime.studio)}</td>
 
-            <td>
+            <td class="col-action">
                 <button class="admin-small-btn edit"
                         onclick="setAnimeUpdateForm(${anime.animeId})">
                     수정
@@ -520,8 +521,9 @@ function renderAdminMemberList() {
         adminPageSize
     );
 
-    pageMemberList.forEach(member => {
+    pageMemberList.forEach((member, index) => {
         const tr = document.createElement("tr");
+        const rowNumber = getRowNumber(adminMemberPage, index);
 
         let deleteButton = `
             <button class="admin-small-btn delete"
@@ -537,12 +539,12 @@ function renderAdminMemberList() {
         }
 
         tr.innerHTML = `
-            <td>${member.memberId}</td>
-            <td>${escapeHtml(member.name)}</td>
-            <td>${escapeHtml(member.email)}</td>
-            <td>${escapeHtml(member.phone)}</td>
-            <td>${escapeHtml(member.role)}</td>
-            <td>${deleteButton}</td>
+            <td class="col-no">${rowNumber}</td>
+            <td class="col-name">${escapeHtml(member.name)}</td>
+            <td class="col-email">${escapeHtml(member.email)}</td>
+            <td class="col-phone">${escapeHtml(member.phone)}</td>
+            <td class="col-role">${escapeHtml(member.role)}</td>
+            <td class="col-action">${deleteButton}</td>
         `;
 
         adminMemberList.appendChild(tr);
@@ -641,7 +643,7 @@ function renderAdminReviewList() {
     if (filteredReviewList.length === 0) {
         adminReviewList.innerHTML = `
             <tr>
-                <td colspan="7">검색 결과가 없습니다.</td>
+                <td colspan="6">검색 결과가 없습니다.</td>
             </tr>
         `;
 
@@ -665,18 +667,18 @@ function renderAdminReviewList() {
         adminPageSize
     );
 
-    pageReviewList.forEach(review => {
+    pageReviewList.forEach((review, index) => {
         const tr = document.createElement("tr");
+        const rowNumber = getRowNumber(adminReviewPage, index);
 
         tr.innerHTML = `
-            <td>${review.reviewId}</td>
-            <td>${review.animeId}</td>
-            <td>${escapeHtml(review.writerName)}</td>
-            <td>${ratingToStars(review.rating)}</td>
-            <td class="admin-content-cell">${escapeHtml(review.content)}</td>
-            <td>${formatDate(review.createdAt)}</td>
+            <td class="col-no">${rowNumber}</td>
+            <td class="col-writer">${escapeHtml(review.writerName)}</td>
+            <td class="col-rating">${ratingToStars(review.rating)}</td>
+            <td class="col-content admin-content-cell">${escapeHtml(review.content)}</td>
+            <td class="col-date">${formatDate(review.createdAt)}</td>
 
-            <td>
+            <td class="col-action">
                 <button class="admin-small-btn delete"
                         onclick="deleteReview(${review.reviewId})">
                     삭제
@@ -765,7 +767,7 @@ function loadAdminCommentList() {
         });
 }
 
-/// =========================
+// =========================
 // 댓글 목록 출력
 // =========================
 function renderAdminCommentList() {
@@ -778,7 +780,7 @@ function renderAdminCommentList() {
     if (filteredCommentList.length === 0) {
         adminCommentList.innerHTML = `
             <tr>
-                <td colspan="6">검색 결과가 없습니다.</td>
+                <td colspan="5">검색 결과가 없습니다.</td>
             </tr>
         `;
 
@@ -802,17 +804,17 @@ function renderAdminCommentList() {
         adminPageSize
     );
 
-    pageCommentList.forEach(comment => {
+    pageCommentList.forEach((comment, index) => {
         const tr = document.createElement("tr");
+        const rowNumber = getRowNumber(adminCommentPage, index);
 
         tr.innerHTML = `
-            <td>${comment.commentId}</td>
-            <td>${comment.reviewId}</td>
-            <td>${escapeHtml(comment.writerName)}</td>
-            <td class="admin-content-cell">${escapeHtml(comment.content)}</td>
-            <td>${formatDate(comment.createdAt)}</td>
+            <td class="col-no">${rowNumber}</td>
+            <td class="col-writer">${escapeHtml(comment.writerName)}</td>
+            <td class="col-content admin-content-cell">${escapeHtml(comment.content)}</td>
+            <td class="col-date">${formatDate(comment.createdAt)}</td>
 
-            <td>
+            <td class="col-action">
                 <button class="admin-small-btn delete"
                         onclick="deleteComment(${comment.commentId})">
                     삭제
@@ -835,6 +837,7 @@ function renderAdminCommentList() {
         }
     );
 }
+
 // =========================
 // 댓글 검색 필터
 // =========================
@@ -886,6 +889,13 @@ function getPageItems(list, currentPage, pageSize) {
     const endIndex = startIndex + pageSize;
 
     return list.slice(startIndex, endIndex);
+}
+
+// =========================
+// 현재 페이지 기준 행 번호 계산
+// =========================
+function getRowNumber(currentPage, index) {
+    return (currentPage - 1) * adminPageSize + index + 1;
 }
 
 // =========================
