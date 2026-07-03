@@ -78,6 +78,8 @@ function renderAnimeDetail(anime) {
     if (detailRating !== null) {
         detailRating.textContent = getAnimeRatingText(anime);
     }
+
+    renderTrailer(anime.videoUrl);
 }
 
 // =========================
@@ -631,6 +633,76 @@ function getAnimeRatingText(anime) {
     }
 
     return `⭐ ${averageRating.toFixed(1)} / 리뷰 ${reviewCount}개`;
+}
+
+// =========================
+// 예고편 영상 출력
+// =========================
+function renderTrailer(videoUrl) {
+    const trailerSection = document.getElementById("trailerSection");
+    const trailerFrame = document.getElementById("trailerFrame");
+
+    if (trailerSection === null || trailerFrame === null) {
+        return;
+    }
+
+    if (videoUrl === null || videoUrl.trim() === "") {
+        trailerSection.style.display = "none";
+        trailerFrame.src = "";
+        return;
+    }
+
+    const embedUrl = convertYoutubeUrlToEmbedUrl(videoUrl);
+
+    if (embedUrl === null) {
+        trailerSection.style.display = "none";
+        trailerFrame.src = "";
+        return;
+    }
+
+    trailerFrame.src = embedUrl;
+    trailerSection.style.display = "block";
+}
+
+// =========================
+// YouTube 주소를 iframe용 embed 주소로 변환
+// =========================
+function convertYoutubeUrlToEmbedUrl(videoUrl) {
+    try {
+        const url = new URL(videoUrl);
+        const host = url.hostname.replace("www.", "");
+
+        // 이미 embed 주소인 경우
+        if (host === "youtube.com" && url.pathname.startsWith("/embed/")) {
+            return videoUrl;
+        }
+
+        // 일반 YouTube 주소
+        // 예: https://www.youtube.com/watch?v=영상ID
+        if (host === "youtube.com" || host === "m.youtube.com") {
+            const videoId = url.searchParams.get("v");
+
+            if (videoId !== null && videoId.trim() !== "") {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+        }
+
+        // 짧은 YouTube 주소
+        // 예: https://youtu.be/영상ID
+        if (host === "youtu.be") {
+            const videoId = url.pathname.replace("/", "");
+
+            if (videoId !== "") {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+        }
+
+        return null;
+
+    } catch (error) {
+        console.error("YouTube URL 변환 실패:", error);
+        return null;
+    }
 }
 
 // =========================

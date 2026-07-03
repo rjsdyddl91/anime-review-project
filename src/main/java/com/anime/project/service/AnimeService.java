@@ -86,6 +86,7 @@ public class AnimeService {
         anime.setStudio(updateAnime.getStudio());
         anime.setDescription(updateAnime.getDescription());
         anime.setImagePath(updateAnime.getImagePath());
+        anime.setVideoUrl(updateAnime.getVideoUrl());
 
         animeRepository.save(anime);
     }

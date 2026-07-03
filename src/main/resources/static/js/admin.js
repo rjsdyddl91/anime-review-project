@@ -330,6 +330,7 @@ function setAnimeUpdateForm(animeId) {
             document.getElementById("adminAnimeGenreId").value = anime.genreId;
             document.getElementById("adminAnimeStudio").value = anime.studio;
             document.getElementById("adminAnimeImagePath").value = anime.imagePath;
+            document.getElementById("adminAnimeVideoUrl").value = anime.videoUrl || "";
             document.getElementById("adminAnimeDescription").value = anime.description;
 
             document.getElementById("adminAnimeSubmitBtn").textContent = "수정";
@@ -412,6 +413,7 @@ function getAnimeFormData() {
     const genreId = document.getElementById("adminAnimeGenreId").value;
     const studio = document.getElementById("adminAnimeStudio").value.trim();
     const imagePath = document.getElementById("adminAnimeImagePath").value.trim();
+    const videoUrl = document.getElementById("adminAnimeVideoUrl").value.trim();
     const description = document.getElementById("adminAnimeDescription").value.trim();
 
     if (title === "") {
@@ -444,6 +446,7 @@ function getAnimeFormData() {
         genreId: Number(genreId),
         studio: studio,
         imagePath: imagePath,
+        videoUrl: videoUrl,
         description: description
     };
 }
@@ -457,11 +460,11 @@ function resetAnimeForm() {
     document.getElementById("adminAnimeGenreId").value = "";
     document.getElementById("adminAnimeStudio").value = "";
     document.getElementById("adminAnimeImagePath").value = "";
+    document.getElementById("adminAnimeVideoUrl").value = "";
     document.getElementById("adminAnimeDescription").value = "";
 
     document.getElementById("adminAnimeSubmitBtn").textContent = "등록";
 }
-
 // =========================
 // 회원 목록 조회
 // =========================

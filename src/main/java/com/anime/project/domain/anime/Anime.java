@@ -31,6 +31,13 @@ public class Anime {
     @Column(nullable = false)
     private String imagePath;
 
+    // =========================
+    // 예고편 영상 URL
+    // DB에는 video_url 컬럼으로 생성됨
+    // =========================
+    @Column(length = 500)
+    private String videoUrl;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
