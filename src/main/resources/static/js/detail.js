@@ -2,6 +2,14 @@ let currentAnimeId = null;
 let selectedRating = 5;
 
 // =========================
+// 본편 회차 관련 변수
+// =========================
+let episodeList = [];
+let currentEpisodePage = 1;
+let selectedEpisodeId = null;
+const EPISODES_PER_PAGE = 10;
+
+// =========================
 // 페이지 로딩 시 실행
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loadAnimeDetail(currentAnimeId);
+    loadEpisodeList(currentAnimeId);
     loadReviewList(currentAnimeId);
     loadBookmarkStatus();
 
@@ -78,8 +87,285 @@ function renderAnimeDetail(anime) {
     if (detailRating !== null) {
         detailRating.textContent = getAnimeRatingText(anime);
     }
+}
 
-    renderTrailer(anime.videoUrl);
+// =========================
+// 본편 회차 목록 조회
+// =========================
+function loadEpisodeList(animeId) {
+    fetch(`/api/episodes/anime/${animeId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP 오류 : " + response.status);
+            }
+
+            return response.json();
+        })
+        .then(list => {
+            console.log("본편 회차 목록:", list);
+
+            episodeList = list || [];
+            currentEpisodePage = 1;
+            selectedEpisodeId = null;
+
+            renderEpisodeSection();
+        })
+        .catch(error => {
+            console.error("본편 회차 목록 불러오기 실패:", error);
+
+            const episodeSection = document.getElementById("episodeSection");
+
+            if (episodeSection !== null) {
+                episodeSection.style.display = "none";
+            }
+        });
+}
+
+// =========================
+// 본편 영역 출력
+// =========================
+function renderEpisodeSection() {
+    const episodeSection = document.getElementById("episodeSection");
+    const episodeCount = document.getElementById("episodeCount");
+    const episodePlayerBox = document.getElementById("episodePlayerBox");
+    const episodeFrame = document.getElementById("episodeFrame");
+
+    if (episodeSection === null) {
+        return;
+    }
+
+    if (episodeList.length === 0) {
+        episodeSection.style.display = "none";
+
+        if (episodePlayerBox !== null) {
+            episodePlayerBox.style.display = "none";
+        }
+
+        if (episodeFrame !== null) {
+            episodeFrame.src = "";
+        }
+
+        return;
+    }
+
+    episodeSection.style.display = "block";
+
+    if (episodeCount !== null) {
+        episodeCount.textContent = `${episodeList.length}화`;
+    }
+
+    if (selectedEpisodeId === null) {
+        selectedEpisodeId = episodeList[0].episodeId;
+        updateEpisodePlayer(episodeList[0]);
+    }
+
+    renderEpisodeList();
+    renderEpisodePagination();
+}
+
+// =========================
+// 본편 회차 목록 출력
+// =========================
+function renderEpisodeList() {
+    const episodeListBox = document.getElementById("episodeList");
+
+    if (episodeListBox === null) {
+        return;
+    }
+
+    episodeListBox.innerHTML = "";
+
+    const startIndex = (currentEpisodePage - 1) * EPISODES_PER_PAGE;
+    const endIndex = startIndex + EPISODES_PER_PAGE;
+    const pageEpisodeList = episodeList.slice(startIndex, endIndex);
+
+    pageEpisodeList.forEach(episode => {
+        const episodeItem = document.createElement("div");
+        episodeItem.className = "episode-item";
+
+        if (Number(selectedEpisodeId) === Number(episode.episodeId)) {
+            episodeItem.classList.add("active");
+        }
+
+        episodeItem.addEventListener("click", () => {
+            selectEpisode(episode.episodeId);
+        });
+
+        episodeItem.innerHTML = `
+            <span class="episode-number">
+                ${episode.episodeNumber}화
+            </span>
+
+            <span class="episode-title">
+                ${escapeHtml(episode.episodeTitle)}
+            </span>
+        `;
+
+        episodeListBox.appendChild(episodeItem);
+    });
+}
+
+// =========================
+// 본편 회차 선택
+// =========================
+function selectEpisode(episodeId) {
+    const episode = episodeList.find(item => Number(item.episodeId) === Number(episodeId));
+
+    if (episode === undefined) {
+        return;
+    }
+
+    selectedEpisodeId = episode.episodeId;
+
+    updateEpisodePlayer(episode);
+    renderEpisodeList();
+}
+
+// =========================
+// 본편 영상 플레이어 변경
+// =========================
+function updateEpisodePlayer(episode) {
+    const episodePlayerBox = document.getElementById("episodePlayerBox");
+    const episodeFrame = document.getElementById("episodeFrame");
+
+    if (episodePlayerBox === null || episodeFrame === null) {
+        return;
+    }
+
+    const embedUrl = convertEpisodeVideoUrl(episode.videoUrl);
+
+    if (embedUrl === null) {
+        episodePlayerBox.style.display = "none";
+        episodeFrame.src = "";
+        alert("재생 가능한 영상 URL이 아닙니다.");
+        return;
+    }
+
+    episodeFrame.src = embedUrl;
+    episodePlayerBox.style.display = "block";
+}
+
+// =========================
+// 본편 영상 URL 변환
+// YouTube watch URL / youtu.be URL도 embed URL로 변환
+// 그 외에는 iframe에 넣을 수 있는 합법적인 embed URL만 사용
+// =========================
+function convertEpisodeVideoUrl(videoUrl) {
+    if (videoUrl === null || videoUrl === undefined || videoUrl.trim() === "") {
+        return null;
+    }
+
+    try {
+        const url = new URL(videoUrl);
+        const host = url.hostname.replace("www.", "");
+
+        if (host === "youtube.com" && url.pathname.startsWith("/embed/")) {
+            return videoUrl;
+        }
+
+        if (host === "youtube.com" || host === "m.youtube.com") {
+            const videoId = url.searchParams.get("v");
+
+            if (videoId !== null && videoId.trim() !== "") {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+        }
+
+        if (host === "youtu.be") {
+            const videoId = url.pathname.replace("/", "");
+
+            if (videoId !== "") {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+        }
+
+        return videoUrl;
+
+    } catch (error) {
+        console.error("본편 영상 URL 변환 실패:", error);
+        return null;
+    }
+}
+
+// =========================
+// 본편 페이징 출력
+// =========================
+function renderEpisodePagination() {
+    const episodePagination = document.getElementById("episodePagination");
+
+    if (episodePagination === null) {
+        return;
+    }
+
+    episodePagination.innerHTML = "";
+
+    const totalPages = Math.ceil(episodeList.length / EPISODES_PER_PAGE);
+
+    if (totalPages <= 1) {
+        return;
+    }
+
+    const prevButton = document.createElement("button");
+    prevButton.className = "episode-page-btn";
+    prevButton.textContent = "이전";
+    prevButton.disabled = currentEpisodePage === 1;
+
+    prevButton.addEventListener("click", () => {
+        goEpisodePage(currentEpisodePage - 1);
+    });
+
+    episodePagination.appendChild(prevButton);
+
+    for (let page = 1; page <= totalPages; page++) {
+        const pageButton = document.createElement("button");
+        pageButton.className = "episode-page-btn";
+        pageButton.textContent = page;
+
+        if (page === currentEpisodePage) {
+            pageButton.classList.add("active");
+        }
+
+        pageButton.addEventListener("click", () => {
+            goEpisodePage(page);
+        });
+
+        episodePagination.appendChild(pageButton);
+    }
+
+    const nextButton = document.createElement("button");
+    nextButton.className = "episode-page-btn";
+    nextButton.textContent = "다음";
+    nextButton.disabled = currentEpisodePage === totalPages;
+
+    nextButton.addEventListener("click", () => {
+        goEpisodePage(currentEpisodePage + 1);
+    });
+
+    episodePagination.appendChild(nextButton);
+}
+
+// =========================
+// 본편 페이지 이동
+// =========================
+function goEpisodePage(page) {
+    const totalPages = Math.ceil(episodeList.length / EPISODES_PER_PAGE);
+
+    if (page < 1 || page > totalPages) {
+        return;
+    }
+
+    currentEpisodePage = page;
+
+    const firstIndex = (currentEpisodePage - 1) * EPISODES_PER_PAGE;
+    const firstEpisode = episodeList[firstIndex];
+
+    if (firstEpisode !== undefined) {
+        selectedEpisodeId = firstEpisode.episodeId;
+        updateEpisodePlayer(firstEpisode);
+    }
+
+    renderEpisodeList();
+    renderEpisodePagination();
 }
 
 // =========================
@@ -633,76 +919,6 @@ function getAnimeRatingText(anime) {
     }
 
     return `⭐ ${averageRating.toFixed(1)} / 리뷰 ${reviewCount}개`;
-}
-
-// =========================
-// 예고편 영상 출력
-// =========================
-function renderTrailer(videoUrl) {
-    const trailerSection = document.getElementById("trailerSection");
-    const trailerFrame = document.getElementById("trailerFrame");
-
-    if (trailerSection === null || trailerFrame === null) {
-        return;
-    }
-
-    if (videoUrl === null || videoUrl.trim() === "") {
-        trailerSection.style.display = "none";
-        trailerFrame.src = "";
-        return;
-    }
-
-    const embedUrl = convertYoutubeUrlToEmbedUrl(videoUrl);
-
-    if (embedUrl === null) {
-        trailerSection.style.display = "none";
-        trailerFrame.src = "";
-        return;
-    }
-
-    trailerFrame.src = embedUrl;
-    trailerSection.style.display = "block";
-}
-
-// =========================
-// YouTube 주소를 iframe용 embed 주소로 변환
-// =========================
-function convertYoutubeUrlToEmbedUrl(videoUrl) {
-    try {
-        const url = new URL(videoUrl);
-        const host = url.hostname.replace("www.", "");
-
-        // 이미 embed 주소인 경우
-        if (host === "youtube.com" && url.pathname.startsWith("/embed/")) {
-            return videoUrl;
-        }
-
-        // 일반 YouTube 주소
-        // 예: https://www.youtube.com/watch?v=영상ID
-        if (host === "youtube.com" || host === "m.youtube.com") {
-            const videoId = url.searchParams.get("v");
-
-            if (videoId !== null && videoId.trim() !== "") {
-                return `https://www.youtube.com/embed/${videoId}`;
-            }
-        }
-
-        // 짧은 YouTube 주소
-        // 예: https://youtu.be/영상ID
-        if (host === "youtu.be") {
-            const videoId = url.pathname.replace("/", "");
-
-            if (videoId !== "") {
-                return `https://www.youtube.com/embed/${videoId}`;
-            }
-        }
-
-        return null;
-
-    } catch (error) {
-        console.error("YouTube URL 변환 실패:", error);
-        return null;
-    }
 }
 
 // =========================

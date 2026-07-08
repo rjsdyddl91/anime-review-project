@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>관리자 페이지 - Anime Review</title>
+    <title>관리자 페이지 - Animation 24</title>
 
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -15,7 +15,7 @@
 
         <!-- 로고 클릭 시 메인으로 이동 -->
         <div class="logo" onclick="location.href='/index.html'">
-            Anime Review
+            Animation 24
         </div>
 
         <div class="header-right">
@@ -44,7 +44,7 @@
         <!-- 페이지 제목 -->
         <section class="admin-title">
             <h1>관리자 페이지</h1>
-            <p>애니, 회원, 리뷰, 댓글을 관리할 수 있습니다.</p>
+            <p>애니, 회차, 회원, 리뷰, 댓글을 관리할 수 있습니다.</p>
         </section>
 
         <!-- =========================
@@ -54,6 +54,10 @@
 
             <button class="admin-tab-btn active" onclick="showAdminSection('anime')">
                 애니 관리
+            </button>
+
+            <button class="admin-tab-btn" onclick="showAdminSection('episode')">
+                회차 관리
             </button>
 
             <button class="admin-tab-btn" onclick="showAdminSection('member')">
@@ -119,13 +123,7 @@
                             <label for="adminAnimeImagePath">이미지 경로</label>
                             <input type="text" id="adminAnimeImagePath" placeholder="이미지 URL 또는 경로를 입력하세요">
                         </div>
-                    </div>
 
-                    <div class="admin-form-group">
-                        <label for="adminAnimeVideoUrl">예고편 URL</label>
-                        <input type="text"
-                            id="adminAnimeVideoUrl"
-                            placeholder="YouTube 예고편 URL을 입력하세요">
                     </div>
 
                     <div class="admin-form-group">
@@ -177,6 +175,114 @@
 
                 <!-- 애니 목록 페이지 버튼 -->
                 <div class="pagination" id="adminAnimePagination"></div>
+
+            </div>
+
+        </section>
+
+        <!-- =========================
+             회차 관리 영역
+        ========================= -->
+        <section class="admin-section" id="adminEpisodeSection">
+
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <h2>회차 등록 / 수정</h2>
+                    <p>애니별 본편 회차와 영상 URL을 관리할 수 있습니다.</p>
+                </div>
+
+                <!-- 회차 등록 / 수정 폼 -->
+                <form class="admin-form" id="adminEpisodeForm">
+
+                    <!-- 수정할 때만 사용되는 숨겨진 회차 ID -->
+                    <input type="hidden" id="adminEpisodeId">
+
+                    <div class="admin-form-row">
+
+                        <div class="admin-form-group">
+                            <label for="adminEpisodeAnimeId">애니 선택</label>
+
+                            <select id="adminEpisodeAnimeId">
+                                <option value="">애니를 선택하세요</option>
+                            </select>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="adminEpisodeNumber">회차 번호</label>
+                            <input type="number"
+                                   id="adminEpisodeNumber"
+                                   min="1"
+                                   placeholder="예: 1">
+                        </div>
+
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label for="adminEpisodeTitle">회차 제목</label>
+                        <input type="text"
+                               id="adminEpisodeTitle"
+                               placeholder="예: 새로운 시작">
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label for="adminEpisodeVideoUrl">영상 URL</label>
+                        <input type="text"
+                               id="adminEpisodeVideoUrl"
+                               placeholder="YouTube embed URL 또는 사용할 수 있는 영상 URL을 입력하세요">
+                    </div>
+
+                    <div class="admin-form-button-area">
+
+                        <button type="submit" class="admin-primary-btn" id="adminEpisodeSubmitBtn">
+                            등록
+                        </button>
+
+                        <button type="button" class="admin-secondary-btn" onclick="resetEpisodeForm()">
+                            입력 초기화
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <h2>회차 목록</h2>
+                    <p>애니를 선택하면 해당 애니의 회차 목록을 확인하고 수정/삭제할 수 있습니다.</p>
+                </div>
+
+                <!-- 회차 목록 조회용 애니 선택 -->
+                <div class="admin-search-area">
+                    <select id="adminEpisodeSearchAnimeId">
+                        <option value="">회차를 조회할 애니를 선택하세요</option>
+                    </select>
+                </div>
+
+                <div class="admin-table-wrap">
+                    <table class="admin-table admin-episode-table">
+                        <thead>
+                            <tr>
+                                <th class="col-no">번호</th>
+                                <th class="col-title">애니</th>
+                                <th class="col-episode">회차</th>
+                                <th class="col-content">회차 제목</th>
+                                <th class="col-url">영상 URL</th>
+                                <th class="col-action">관리</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="adminEpisodeList">
+                            <!-- 회차 목록 JS 출력 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 회차 목록 페이지 버튼 -->
+                <div class="pagination" id="adminEpisodePagination"></div>
 
             </div>
 

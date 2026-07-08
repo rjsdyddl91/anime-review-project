@@ -7,6 +7,7 @@ let currentAdminUser = null;
 // 관리자 목록 데이터
 // =========================
 let adminAnimeData = [];
+let adminEpisodeData = [];
 let adminMemberData = [];
 let adminReviewData = [];
 let adminCommentData = [];
@@ -16,11 +17,14 @@ let adminCommentData = [];
 let adminMemberSearchKeyword = "";
 let adminReviewSearchKeyword = "";
 let adminCommentSearchKeyword = "";
+let adminEpisodeSearchAnimeId = "";
+
 
 // =========================
 // 관리자 페이지 번호
 // =========================
 let adminAnimePage = 1;
+let adminEpisodePage = 1;
 let adminMemberPage = 1;
 let adminReviewPage = 1;
 let adminCommentPage = 1;
@@ -36,10 +40,12 @@ const adminPageSize = 10;
 document.addEventListener("DOMContentLoaded", () => {
     checkAdminUser();
     initAnimeForm();
+    initEpisodeForm();
     initMemberSearch();
     initReviewSearch();
     initCommentSearch();
 });
+
 // =========================
 // 관리자 권한 확인
 // =========================
@@ -88,28 +94,36 @@ function showAdminSection(sectionName) {
         button.classList.remove("active");
     });
 
+    const tabButtons = document.querySelectorAll(".admin-tab-btn");
+
     // 선택한 섹션 표시
     if (sectionName === "anime") {
         document.getElementById("adminAnimeSection").classList.add("active");
-        document.querySelectorAll(".admin-tab-btn")[0].classList.add("active");
+        tabButtons[0].classList.add("active");
         loadAdminAnimeList();
+    }
+
+    if (sectionName === "episode") {
+        document.getElementById("adminEpisodeSection").classList.add("active");
+        tabButtons[1].classList.add("active");
+        loadEpisodeAnimeOptions();
     }
 
     if (sectionName === "member") {
         document.getElementById("adminMemberSection").classList.add("active");
-        document.querySelectorAll(".admin-tab-btn")[1].classList.add("active");
+        tabButtons[2].classList.add("active");
         loadAdminMemberList();
     }
 
     if (sectionName === "review") {
         document.getElementById("adminReviewSection").classList.add("active");
-        document.querySelectorAll(".admin-tab-btn")[2].classList.add("active");
+        tabButtons[3].classList.add("active");
         loadAdminReviewList();
     }
 
     if (sectionName === "comment") {
         document.getElementById("adminCommentSection").classList.add("active");
-        document.querySelectorAll(".admin-tab-btn")[3].classList.add("active");
+        tabButtons[4].classList.add("active");
         loadAdminCommentList();
     }
 }
@@ -330,7 +344,6 @@ function setAnimeUpdateForm(animeId) {
             document.getElementById("adminAnimeGenreId").value = anime.genreId;
             document.getElementById("adminAnimeStudio").value = anime.studio;
             document.getElementById("adminAnimeImagePath").value = anime.imagePath;
-            document.getElementById("adminAnimeVideoUrl").value = anime.videoUrl || "";
             document.getElementById("adminAnimeDescription").value = anime.description;
 
             document.getElementById("adminAnimeSubmitBtn").textContent = "수정";
@@ -413,7 +426,6 @@ function getAnimeFormData() {
     const genreId = document.getElementById("adminAnimeGenreId").value;
     const studio = document.getElementById("adminAnimeStudio").value.trim();
     const imagePath = document.getElementById("adminAnimeImagePath").value.trim();
-    const videoUrl = document.getElementById("adminAnimeVideoUrl").value.trim();
     const description = document.getElementById("adminAnimeDescription").value.trim();
 
     if (title === "") {
@@ -446,7 +458,6 @@ function getAnimeFormData() {
         genreId: Number(genreId),
         studio: studio,
         imagePath: imagePath,
-        videoUrl: videoUrl,
         description: description
     };
 }
@@ -460,11 +471,436 @@ function resetAnimeForm() {
     document.getElementById("adminAnimeGenreId").value = "";
     document.getElementById("adminAnimeStudio").value = "";
     document.getElementById("adminAnimeImagePath").value = "";
-    document.getElementById("adminAnimeVideoUrl").value = "";
     document.getElementById("adminAnimeDescription").value = "";
 
     document.getElementById("adminAnimeSubmitBtn").textContent = "등록";
 }
+
+// =========================
+// 회차 등록 / 수정 폼 초기 설정
+// =========================
+function initEpisodeForm() {
+    const adminEpisodeForm = document.getElementById("adminEpisodeForm");
+
+    if (adminEpisodeForm === null) {
+        return;
+    }
+
+    adminEpisodeForm.addEventListener("submit", event => {
+        event.preventDefault(); 
+
+        const episodeId = document.getElementById("adminEpisodeId").value;
+
+        if (episodeId === "") {
+            insertEpisode();
+        } else {
+            updateEpisode(episodeId);
+        }
+    });
+
+    const episodeSearchSelect = document.getElementById("adminEpisodeSearchAnimeId");
+
+    if (episodeSearchSelect !== null) {
+        episodeSearchSelect.addEventListener("change", () => {
+            adminEpisodeSearchAnimeId = episodeSearchSelect.value;
+            adminEpisodePage = 1;
+            loadAdminEpisodeList();
+        });
+    }
+}
+
+// =========================
+// 회차 관리용 애니 선택 옵션 조회
+// =========================
+function loadEpisodeAnimeOptions() {
+    fetch("/anime")
+        .then(response => response.json())
+        .then(animeList => {
+            adminAnimeData = animeList;
+
+            renderEpisodeAnimeOptions();
+
+            if (adminEpisodeSearchAnimeId !== "") {
+                loadAdminEpisodeList();
+            } else {
+                renderAdminEpisodeList();
+            }
+        })
+        .catch(error => {
+            console.error("회차 관리용 애니 목록 조회 실패:", error);
+        });
+}
+
+// =========================
+// 회차 관리용 애니 선택 옵션 출력
+// =========================
+function renderEpisodeAnimeOptions() {
+    const formSelect = document.getElementById("adminEpisodeAnimeId");
+    const searchSelect = document.getElementById("adminEpisodeSearchAnimeId");
+
+    if (formSelect === null || searchSelect === null) {
+        return;
+    }
+
+    const currentFormValue = formSelect.value;
+    const currentSearchValue = searchSelect.value;
+
+    let formOptionHtml = `<option value="">애니를 선택하세요</option>`;
+    let searchOptionHtml = `<option value="">애니를 선택하세요</option>`;
+
+    adminAnimeData.forEach(anime => {
+        formOptionHtml += `
+            <option value="${anime.animeId}">
+                ${escapeHtml(anime.title)}
+            </option>
+        `;
+
+        searchOptionHtml += `
+            <option value="${anime.animeId}">
+                ${escapeHtml(anime.title)}
+            </option>
+        `;
+    });
+
+    formSelect.innerHTML = formOptionHtml;
+    searchSelect.innerHTML = searchOptionHtml;
+
+    formSelect.value = currentFormValue;
+    searchSelect.value = currentSearchValue;
+}
+
+// =========================
+// 회차 목록 조회
+// =========================
+function loadAdminEpisodeList() {
+    const searchSelect = document.getElementById("adminEpisodeSearchAnimeId");
+
+    if (searchSelect === null) {
+        return;
+    }
+
+    const animeId = searchSelect.value;
+    adminEpisodeSearchAnimeId = animeId;
+
+    if (animeId === "") {
+        adminEpisodeData = [];
+        renderAdminEpisodeList();
+        return;
+    }
+
+    fetch(`/api/episodes/anime/${animeId}`)
+        .then(response => response.json())
+        .then(episodeList => {
+            adminEpisodeData = episodeList;
+            adminEpisodePage = 1;
+
+            renderAdminEpisodeList();
+        })
+        .catch(error => {
+            console.error("회차 목록 조회 실패:", error);
+            alert("회차 목록을 불러오지 못했습니다.");
+        });
+}
+
+// =========================
+// 회차 목록 출력
+// =========================
+function renderAdminEpisodeList() {
+    const adminEpisodeList = document.getElementById("adminEpisodeList");
+
+    if (adminEpisodeList === null) {
+        return;
+    }
+
+    adminEpisodeList.innerHTML = "";
+
+    if (adminEpisodeSearchAnimeId === "") {
+        adminEpisodeList.innerHTML = `
+            <tr>
+                <td colspan="6">회차를 조회할 애니를 선택해주세요.</td>
+            </tr>
+        `;
+
+        renderAdminPagination(
+            0,
+            adminPageSize,
+            adminEpisodePage,
+            "adminEpisodePagination",
+            page => {
+                adminEpisodePage = page;
+                renderAdminEpisodeList();
+            }
+        );
+
+        return;
+    }
+
+    if (adminEpisodeData.length === 0) {
+        adminEpisodeList.innerHTML = `
+            <tr>
+                <td colspan="6">등록된 회차가 없습니다.</td>
+            </tr>
+        `;
+
+        renderAdminPagination(
+            adminEpisodeData.length,
+            adminPageSize,
+            adminEpisodePage,
+            "adminEpisodePagination",
+            page => {
+                adminEpisodePage = page;
+                renderAdminEpisodeList();
+            }
+        );
+
+        return;
+    }
+
+    const pageEpisodeList = getPageItems(
+        adminEpisodeData,
+        adminEpisodePage,
+        adminPageSize
+    );
+
+    pageEpisodeList.forEach((episode, index) => {
+        const tr = document.createElement("tr");
+        const rowNumber = getRowNumber(adminEpisodePage, index);
+
+        tr.innerHTML = `
+            <td class="col-no">${rowNumber}</td>
+            <td class="col-title">${escapeHtml(getAnimeTitleById(episode.animeId))}</td>
+            <td class="col-episode">${episode.episodeNumber}화</td>
+            <td class="col-content admin-content-cell">${escapeHtml(episode.episodeTitle)}</td>
+            <td class="col-url admin-content-cell">${escapeHtml(episode.videoUrl)}</td>
+
+            <td class="col-action">
+                <button class="admin-small-btn edit"
+                        onclick="setEpisodeUpdateForm(${episode.episodeId})">
+                    수정
+                </button>
+
+                <button class="admin-small-btn delete"
+                        onclick="deleteEpisode(${episode.episodeId})">
+                    삭제
+                </button>
+            </td>
+        `;
+
+        adminEpisodeList.appendChild(tr);
+    });
+
+    renderAdminPagination(
+        adminEpisodeData.length,
+        adminPageSize,
+        adminEpisodePage,
+        "adminEpisodePagination",
+        page => {
+            adminEpisodePage = page;
+            renderAdminEpisodeList();
+            scrollToAdminSection("adminEpisodeList");
+        }
+    );
+}
+
+// =========================
+// 회차 등록
+// =========================
+function insertEpisode() {
+    const episode = getEpisodeFormData();
+
+    if (episode === null) {
+        return;
+    }
+
+    fetch("/api/episodes", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(episode)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("회차 등록 실패");
+            }
+
+            return response.text();
+        })
+        .then(() => {
+            alert("회차가 등록되었습니다.");
+
+            const animeId = String(episode.animeId);
+
+            resetEpisodeForm();
+
+            document.getElementById("adminEpisodeAnimeId").value = animeId;
+            document.getElementById("adminEpisodeSearchAnimeId").value = animeId;
+
+            adminEpisodeSearchAnimeId = animeId;
+            loadAdminEpisodeList();
+        })
+        .catch(error => {
+            console.error("회차 등록 실패:", error);
+            alert("회차 등록 중 오류가 발생했습니다. 같은 애니에 같은 회차 번호가 이미 있는지 확인해주세요.");
+        });
+}
+
+// =========================
+// 회차 수정 폼에 기존 데이터 넣기
+// =========================
+function setEpisodeUpdateForm(episodeId) {
+    const episode = adminEpisodeData.find(item => Number(item.episodeId) === Number(episodeId));
+
+    if (episode === undefined) {
+        alert("회차 정보를 찾을 수 없습니다.");
+        return;
+    }
+
+    document.getElementById("adminEpisodeId").value = episode.episodeId;
+    document.getElementById("adminEpisodeAnimeId").value = episode.animeId;
+    document.getElementById("adminEpisodeNumber").value = episode.episodeNumber;
+    document.getElementById("adminEpisodeTitle").value = episode.episodeTitle;
+    document.getElementById("adminEpisodeVideoUrl").value = episode.videoUrl;
+
+    document.getElementById("adminEpisodeSubmitBtn").textContent = "수정";
+
+    scrollToAdminSection("adminEpisodeSection");
+}
+
+// =========================
+// 회차 수정
+// =========================
+function updateEpisode(episodeId) {
+    const episode = getEpisodeFormData();
+
+    if (episode === null) {
+        return;
+    }
+
+    fetch(`/api/episodes/${episodeId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(episode)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("회차 수정 실패");
+            }
+
+            return response.text();
+        })
+        .then(() => {
+            alert("회차가 수정되었습니다.");
+
+            const animeId = String(episode.animeId);
+
+            resetEpisodeForm();
+
+            document.getElementById("adminEpisodeAnimeId").value = animeId;
+            document.getElementById("adminEpisodeSearchAnimeId").value = animeId;
+
+            adminEpisodeSearchAnimeId = animeId;
+            loadAdminEpisodeList();
+        })
+        .catch(error => {
+            console.error("회차 수정 실패:", error);
+            alert("회차 수정 중 오류가 발생했습니다. 같은 애니에 같은 회차 번호가 이미 있는지 확인해주세요.");
+        });
+}
+
+// =========================
+// 회차 삭제
+// =========================
+function deleteEpisode(episodeId) {
+    if (!confirm("정말 이 회차를 삭제하시겠습니까?")) {
+        return;
+    }
+
+    fetch(`/api/episodes/${episodeId}`, {
+        method: "DELETE"
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("회차 삭제 실패");
+            }
+
+            return response.text();
+        })
+        .then(() => {
+            alert("회차가 삭제되었습니다.");
+            loadAdminEpisodeList();
+        })
+        .catch(error => {
+            console.error("회차 삭제 실패:", error);
+            alert("회차 삭제 중 오류가 발생했습니다.");
+        });
+}
+
+// =========================
+// 회차 폼 데이터 가져오기
+// =========================
+function getEpisodeFormData() {
+    const animeId = document.getElementById("adminEpisodeAnimeId").value;
+    const episodeNumber = document.getElementById("adminEpisodeNumber").value;
+    const episodeTitle = document.getElementById("adminEpisodeTitle").value.trim();
+    const videoUrl = document.getElementById("adminEpisodeVideoUrl").value.trim();
+
+    if (animeId === "") {
+        alert("애니를 선택해주세요.");
+        return null;
+    }
+
+    if (episodeNumber === "" || Number(episodeNumber) <= 0) {
+        alert("회차 번호를 올바르게 입력해주세요.");
+        return null;
+    }
+
+    if (episodeTitle === "") {
+        alert("회차 제목을 입력해주세요.");
+        return null;
+    }
+
+    if (videoUrl === "") {
+        alert("영상 URL을 입력해주세요.");
+        return null;
+    }
+
+    return {
+        animeId: Number(animeId),
+        episodeNumber: Number(episodeNumber),
+        episodeTitle: episodeTitle,
+        videoUrl: videoUrl
+    };
+}
+
+// =========================
+// 회차 입력 폼 초기화
+// =========================
+function resetEpisodeForm() {
+    document.getElementById("adminEpisodeId").value = "";
+    document.getElementById("adminEpisodeAnimeId").value = "";
+    document.getElementById("adminEpisodeNumber").value = "";
+    document.getElementById("adminEpisodeTitle").value = "";
+    document.getElementById("adminEpisodeVideoUrl").value = "";
+
+    document.getElementById("adminEpisodeSubmitBtn").textContent = "등록";
+}
+
+// =========================
+// animeId로 애니 제목 찾기
+// =========================
+function getAnimeTitleById(animeId) {
+    const anime = adminAnimeData.find(item => Number(item.animeId) === Number(animeId));
+
+    if (anime === undefined) {
+        return `애니 ID ${animeId}`;
+    }
+
+    return anime.title;
+}
+
 // =========================
 // 회원 목록 조회
 // =========================

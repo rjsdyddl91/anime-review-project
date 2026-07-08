@@ -2,9 +2,11 @@ package com.anime.project.service;
 
 import com.anime.project.domain.anime.Anime;
 import com.anime.project.repository.AnimeRepository;
+import com.anime.project.repository.EpisodeRepository;
 import com.anime.project.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,10 +17,12 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
     private final ReviewRepository reviewRepository;
+    private final EpisodeRepository episodeRepository;
 
     // =========================
     // 애니 등록
     // =========================
+    @Transactional
     public void insert(Anime anime) {
         anime.setCreatedAt(LocalDateTime.now());
         animeRepository.save(anime);
@@ -76,6 +80,7 @@ public class AnimeService {
     // =========================
     // 애니 수정
     // =========================
+    @Transactional
     public void update(Long animeId, Anime updateAnime) {
 
         Anime anime = animeRepository.findById(animeId)
@@ -86,7 +91,6 @@ public class AnimeService {
         anime.setStudio(updateAnime.getStudio());
         anime.setDescription(updateAnime.getDescription());
         anime.setImagePath(updateAnime.getImagePath());
-        anime.setVideoUrl(updateAnime.getVideoUrl());
 
         animeRepository.save(anime);
     }
@@ -94,7 +98,13 @@ public class AnimeService {
     // =========================
     // 애니 삭제
     // =========================
+    @Transactional
     public void delete(Long animeId) {
+
+        // 해당 애니에 속한 회차 먼저 삭제
+        episodeRepository.deleteByAnimeId(animeId);
+
+        // 애니 삭제
         animeRepository.deleteById(animeId);
     }
 

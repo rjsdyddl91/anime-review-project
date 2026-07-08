@@ -1808,10 +1808,10 @@ button {
 }
 
 /* =========================
-   상세페이지 예고편 영상
+   상세페이지 본편 회차
 ========================= */
 
-.trailer-section {
+.episode-section {
     max-width: 1000px;
     margin: 32px auto;
     background-color: white;
@@ -1820,30 +1820,217 @@ button {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-.trailer-header {
-    margin-bottom: 18px;
+.episode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
-.trailer-header h2 {
+.episode-header h2 {
     margin: 0;
     font-size: 24px;
     color: #333;
 }
 
-.trailer-box {
+.episode-header p {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: #777;
+}
+
+.episode-count {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background-color: #f3f4f6;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+}
+
+.episode-list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.episode-item {
+    min-width: 0;
+    height: 58px;
+    border: 1px solid #e5e7eb;
+    background-color: #fafafa;
+    border-radius: 14px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    overflow: hidden;
+}
+
+.episode-item:hover {
+    background-color: #f0f2f5;
+    transform: translateY(-2px);
+}
+
+.episode-item.active {
+    border-color: #ff6b6b;
+    background-color: #fff1f1;
+}
+
+.episode-number {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ff6b6b;
+}
+
+.episode-title {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    font-size: 13px;
+    color: #333;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.episode-player-box {
     position: relative;
     width: 100%;
     padding-top: 56.25%;
     border-radius: 18px;
     overflow: hidden;
     background-color: #111;
+    margin-top: 0;
 }
 
-.trailer-box iframe {
+.episode-player-box iframe {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     border: none;
+}
+
+.episode-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 22px;
+}
+
+
+.episode-page-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 999px;
+    background-color: #f3f4f6;
+    color: #444;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.episode-page-btn:hover {
+    background-color: #e5e7eb;
+}
+
+.episode-page-btn.active {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.episode-page-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* 작은 화면 대응 */
+@media (max-width: 900px) {
+    .episode-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .episode-header {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .episode-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* =========================
+   관리자 회차 관리 테이블
+========================= */
+
+.admin-episode-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.admin-episode-table .col-no {
+    width: 70px;
+    text-align: center;
+}
+
+.admin-episode-table .col-title {
+    width: 220px;
+}
+
+.admin-episode-table .col-episode {
+    width: 90px;
+    text-align: center;
+}
+
+.admin-episode-table .col-content {
+    width: 260px;
+}
+
+.admin-episode-table .col-url {
+    width: 300px;
+}
+
+.admin-episode-table .col-action {
+    width: 130px;
+    text-align: center;
+}
+
+/* 회차 제목 / URL 길어질 때 말줄임 */
+.admin-episode-table .admin-content-cell {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* =========================
+   관리자 회차 선택 박스
+========================= */
+
+.admin-search-area select {
+    width: 100%;
+    max-width: 360px;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background-color: white;
+    font-size: 15px;
+    color: #444;
+    outline: none;
+}
+
+.admin-search-area select:focus {
+    border-color: #ff5a8a;
+    box-shadow: 0 0 0 3px rgba(255, 90, 138, 0.12);
 }
