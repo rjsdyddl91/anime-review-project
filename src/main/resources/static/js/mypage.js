@@ -35,7 +35,7 @@ function loadMyPage() {
         .then(response => response.text())
         .then(text => {
             if (text === "" || text === "null") {
-                alert("로그인 후 이용해주세요.");
+                alert("ログイン後にご利用ください。");
                 location.href = "/login.html";
                 return;
             }
@@ -49,7 +49,7 @@ function loadMyPage() {
         })
         .catch(error => {
             console.error("마이페이지 조회 실패:", error);
-            alert("마이페이지 정보를 불러오지 못했습니다.");
+            alert("マイページ情報を読み込めませんでした。");
         });
 }
 
@@ -61,22 +61,22 @@ function renderMyProfile(member) {
 
     myProfile.innerHTML = `
         <div class="profile-row">
-            <span>이름</span>
+            <span>名前</span>
             <strong>${escapeHtml(member.name)}</strong>
         </div>
 
         <div class="profile-row">
-            <span>이메일</span>
+            <span>メールアドレス</span>
             <strong>${escapeHtml(member.email)}</strong>
         </div>
 
         <div class="profile-row">
-            <span>전화번호</span>
+            <span>電話番号</span>
             <strong>${escapeHtml(member.phone)}</strong>
         </div>
 
         <div class="profile-row">
-            <span>권한</span>
+            <span>権限</span>
             <strong>${escapeHtml(member.role)}</strong>
         </div>
     `;
@@ -93,7 +93,7 @@ function loadMyBookmarks() {
             myBookmarkPage = 1;
 
             document.getElementById("myBookmarkCount").textContent =
-                `${bookmarkList.length}개`;
+                `${bookmarkList.length}件`;
 
             renderMyBookmarks();
         })
@@ -116,7 +116,7 @@ function renderMyBookmarks() {
     if (myBookmarkData.length === 0) {
         myBookmarkList.innerHTML = `
             <div class="mypage-empty">
-                북마크한 애니가 없습니다.
+                ブックマークしたアニメがありません。
             </div>
         `;
 
@@ -201,7 +201,7 @@ function loadMyReviews() {
             myReviewPage = 1;
 
             document.getElementById("myReviewCount").textContent =
-                `${reviewList.length}개`;
+                `${reviewList.length}件`;
 
             renderMyReviews();
         })
@@ -224,7 +224,7 @@ function renderMyReviews() {
     if (myReviewData.length === 0) {
         myReviewList.innerHTML = `
             <div class="mypage-empty">
-                작성한 리뷰가 없습니다.
+                投稿したレビューがありません。
             </div>
         `;
 
@@ -309,7 +309,7 @@ function loadMyComments() {
             myCommentPage = 1;
 
             document.getElementById("myCommentCount").textContent =
-                `${commentList.length}개`;
+                `${commentList.length}件`;
 
             renderMyComments();
         })
@@ -329,7 +329,7 @@ function renderMyComments() {
     if (myCommentData.length === 0) {
         myCommentList.innerHTML = `
             <div class="mypage-empty">
-                작성한 댓글이 없습니다.
+                投稿したコメントがありません。
             </div>
         `;
 
@@ -359,7 +359,7 @@ function renderMyComments() {
 
         item.innerHTML = `
             <div class="mypage-item-top">
-                <strong>내 댓글</strong>
+                <strong>自分のコメント</strong>
                 <span>${formatDate(comment.createdAt)}</span>
             </div>
 
@@ -415,7 +415,7 @@ function renderPagination(totalCount, pageSize, currentPage, paginationId, onPag
     // 이전 버튼
     const prevBtn = document.createElement("button");
     prevBtn.className = "page-btn";
-    prevBtn.textContent = "이전";
+    prevBtn.textContent = "前へ";
     prevBtn.disabled = currentPage === 1;
 
     prevBtn.onclick = () => {
@@ -446,7 +446,7 @@ function renderPagination(totalCount, pageSize, currentPage, paginationId, onPag
     // 다음 버튼
     const nextBtn = document.createElement("button");
     nextBtn.className = "page-btn";
-    nextBtn.textContent = "다음";
+    nextBtn.textContent = "次へ";
     nextBtn.disabled = currentPage === totalPage;
 
     nextBtn.onclick = () => {
@@ -517,12 +517,12 @@ function initChangePassword() {
         const resultBox = document.getElementById("passwordChangeResult");
 
         if (currentPassword === "" || newPassword === "" || newPasswordCheck === "") {
-            alert("비밀번호를 모두 입력해주세요.");
+            alert("パスワードをすべて入力してください。");
             return;
         }
 
         if (newPassword !== newPasswordCheck) {
-            alert("새 비밀번호가 일치하지 않습니다.");
+            alert("新しいパスワードが一致しません。");
             return;
         }
 
@@ -540,14 +540,14 @@ function initChangePassword() {
             .then(response => response.text())
             .then(result => {
                 if (result === "password changed") {
-                    alert("비밀번호가 변경되었습니다.");
+                    alert("パスワードが変更されました。");
 
                     document.getElementById("currentPassword").value = "";
                     document.getElementById("newPassword").value = "";
                     document.getElementById("newPasswordCheck").value = "";
 
                     if (resultBox !== null) {
-                        resultBox.textContent = "비밀번호가 변경되었습니다.";
+                        resultBox.textContent = "パスワードが変更されました。";
                         resultBox.classList.remove("error");
                     }
 
@@ -563,7 +563,7 @@ function initChangePassword() {
             })
             .catch(error => {
                 console.error("비밀번호 변경 실패:", error);
-                alert("비밀번호 변경 중 오류가 발생했습니다.");
+                alert("パスワード変更中にエラーが発生しました。");
             });
     });
 }

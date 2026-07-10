@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지 - Anime Review</title>
+    <title>マイページ - Anime Review</title>
 
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -22,13 +22,13 @@
 
             <!-- 로그인 상태에 따라 common.js에서 변경 -->
             <nav class="nav" id="navMenu">
-                <a href="#" onclick="needLogin()">마이페이지</a>
+                <a href="#" onclick="needLogin()">マイページ</a>
             </nav>
 
             <!-- 로그인 / 로그아웃 영역 -->
             <div class="auth-area" id="authArea">
                 <button class="login-btn" onclick="location.href='/login.html'">
-                    로그인
+                    ログイン
                 </button>
             </div>
 
@@ -43,8 +43,8 @@
 
         <!-- 페이지 제목 -->
         <section class="mypage-title">
-            <h1>마이페이지</h1>
-            <p>내 활동 내역을 확인할 수 있습니다.</p>
+            <h1>マイページ</h1>
+            <p>自分の活動履歴を確認できます。</p>
         </section>
 
         <!-- =========================
@@ -52,7 +52,7 @@
         ========================= -->
         <section class="mypage-card">
             <div class="mypage-card-header">
-                <h2>내 정보</h2>
+                <h2>プロフィール</h2>
             </div>
 
             <div class="mypage-profile" id="myProfile">
@@ -65,8 +65,8 @@
         ========================= -->
         <section class="mypage-card">
             <div class="mypage-card-header">
-                <h2>북마크 목록</h2>
-                <span id="myBookmarkCount">0개</span>
+                <h2>ブックマーク一覧</h2>
+                <span id="myBookmarkCount">0件</span>
             </div>
 
             <div class="mypage-anime-grid" id="myBookmarkList">
@@ -82,8 +82,8 @@
         ========================= -->
         <section class="mypage-card">
             <div class="mypage-card-header">
-                <h2>리뷰 목록</h2>
-                <span id="myReviewCount">0개</span>
+                <h2>レビュー一覧</h2>
+                <span id="myReviewCount">0件</span>
             </div>
 
             <div class="mypage-list" id="myReviewList">
@@ -99,8 +99,8 @@
         ========================= -->
         <section class="mypage-card">
             <div class="mypage-card-header">
-                <h2>댓글 목록</h2>
-                <span id="myCommentCount">0개</span>
+                <h2>コメント一覧</h2>
+                <span id="myCommentCount">0件</span>
             </div>
 
             <div class="mypage-list" id="myCommentList">
@@ -116,23 +116,23 @@
         ========================= -->
         <section class="mypage-card">
             <div class="mypage-card-header">
-                <h2>비밀번호 변경</h2>
+                <h2>パスワード変更</h2>
             </div>
 
             <div class="mypage-password-form">
 
                 <!-- 현재 비밀번호 -->
-                <input type="password" id="currentPassword" placeholder="현재 비밀번호">
+                <input type="password" id="currentPassword" placeholder="現在のパスワード">
 
                 <!-- 새 비밀번호 -->
-                <input type="password" id="newPassword" placeholder="새 비밀번호">
+                <input type="password" id="newPassword" placeholder="新しいパスワード">
 
                 <!-- 새 비밀번호 확인 -->
-                <input type="password" id="newPasswordCheck" placeholder="새 비밀번호 확인">
+                <input type="password" id="newPasswordCheck" placeholder="新しいパスワード確認">
 
                 <!-- 비밀번호 변경 버튼 -->
                 <button type="button" id="changePasswordBtn" class="auth-btn">
-                    비밀번호 변경
+                    パスワードを変更
                 </button>
 
                 <!-- 결과 메시지 -->

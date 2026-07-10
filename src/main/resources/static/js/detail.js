@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentAnimeId = getAnimeIdFromUrl();
 
     if (currentAnimeId === null) {
-        alert("잘못된 접근입니다.");
+        alert("不正なアクセスです。");
         location.href = "/index.html";
         return;
     }
@@ -54,7 +54,7 @@ function loadAnimeDetail(animeId) {
         })
         .catch(error => {
             console.error("애니 상세 불러오기 실패:", error);
-            alert("애니 정보를 불러오지 못했습니다.");
+            alert("アニメ情報を読み込めませんでした。");
             location.href = "/index.html";
         });
 }
@@ -95,12 +95,12 @@ function loadBookmarkStatus() {
         .then(result => {
             if (result === "true") {
                 bookmarkBtn.classList.add("active");
-                bookmarkBtn.textContent = "♥ 북마크";
+                bookmarkBtn.textContent = "♥ ブックマーク";
                 return;
             }
 
             bookmarkBtn.classList.remove("active");
-            bookmarkBtn.textContent = "♡ 북마크";
+            bookmarkBtn.textContent = "♡ ブックマーク";
         })
         .catch(error => {
             console.error("북마크 상태 조회 실패:", error);
@@ -129,7 +129,7 @@ function initBookmark() {
                 }
 
                 if (result === "login required" || result === "로그인이 필요합니다.") {
-                    alert("로그인 후 이용해주세요.");
+                    alert("ログイン後にご利用ください。");
                     location.href = "/login.html";
                     return;
                 }
@@ -138,7 +138,7 @@ function initBookmark() {
             })
             .catch(error => {
                 console.error("북마크 처리 실패:", error);
-                alert("북마크 처리 중 오류가 발생했습니다.");
+                alert("ブックマーク処理中にエラーが発生しました。");
             });
     });
 }
@@ -172,12 +172,12 @@ function renderReviewList(reviewList) {
     const reviewCount = document.getElementById("reviewCount");
 
     reviewListBox.innerHTML = "";
-    reviewCount.textContent = `${reviewList.length}개`;
+    reviewCount.textContent = `${reviewList.length}件`;
 
     if (reviewList.length === 0) {
         reviewListBox.innerHTML = `
             <div class="empty-review">
-                아직 등록된 리뷰가 없습니다.
+                まだ登録されたレビューがありません。
             </div>
         `;
         return;
@@ -211,12 +211,12 @@ function createReviewViewHtml(review) {
             actionButtons += `
                 <button class="review-action-btn edit-btn"
                         onclick="showReviewEditForm(${review.reviewId}, ${review.rating}, '${escapeForAttribute(review.content)}')">
-                    수정
+                    編集
                 </button>
 
                 <button class="review-action-btn delete-btn"
                         onclick="deleteReview(${review.reviewId})">
-                    삭제
+                    削除
                 </button>
             `;
         }
@@ -228,7 +228,7 @@ function createReviewViewHtml(review) {
             actionButtons += `
                 <button class="review-action-btn delete-btn"
                         onclick="deleteReview(${review.reviewId})">
-                    삭제
+                    削除
                 </button>
             `;
         }
@@ -245,7 +245,7 @@ function createReviewViewHtml(review) {
         </div>
 
         <div class="review-writer">
-            작성자: ${review.writerName || "알 수 없음"}
+            投稿者: ${review.writerName || "不明"}
         </div>
 
         <div class="review-footer">
@@ -264,16 +264,16 @@ function createReviewViewHtml(review) {
 
         <div class="comment-section">
             <div class="comment-header" id="commentHeader-${review.reviewId}">
-                댓글 0개
+                コメント 0件
             </div>
 
             <div class="comment-write-box">
                 <input type="text"
                        id="commentInput-${review.reviewId}"
-                       placeholder="댓글을 입력하세요.">
+                       placeholder="コメントを入力してください。">
 
                 <button onclick="insertComment(${review.reviewId})">
-                    등록
+                    登録
                 </button>
             </div>
 
@@ -299,7 +299,7 @@ function initReviewSubmit() {
         const content = document.getElementById("reviewContent").value.trim();
 
         if (content === "") {
-            alert("리뷰 내용을 입력해주세요.");
+            alert("レビュー内容を入力してください。");
             return;
         }
 
@@ -319,7 +319,7 @@ function initReviewSubmit() {
             .then(response => response.text())
             .then(result => {
                 if (result === "review inserted") {
-                    alert("리뷰가 등록되었습니다.");
+                    alert("レビューが登録されました。");
                     document.getElementById("reviewContent").value = "";
                     selectedRating = 5;
                     fillStars(selectedRating);
@@ -330,7 +330,7 @@ function initReviewSubmit() {
                 }
 
                 if (result === "login required" || result === "로그인이 필요합니다.") {
-                    alert("로그인 후 이용해주세요.");
+                    alert("ログイン後にご利用ください。");
                     location.href = "/login.html";
                     return;
                 }
@@ -339,7 +339,7 @@ function initReviewSubmit() {
             })
             .catch(error => {
                 console.error("리뷰 등록 실패:", error);
-                alert("리뷰 등록 중 오류가 발생했습니다.");
+                alert("レビュー登録中にエラーが発生しました。");
             });
     });
 }
@@ -388,7 +388,7 @@ function showReviewEditForm(reviewId, rating, content) {
     reviewItem.innerHTML = `
         <div class="review-edit-box">
             <div class="review-form-row">
-                <label>별점</label>
+                <label>評価</label>
 
                 <div class="star-rating edit-star-rating" id="editStarRating-${reviewId}">
                     ${createEditStarsHtml(rating)}
@@ -400,12 +400,12 @@ function showReviewEditForm(reviewId, rating, content) {
             <div class="review-edit-actions">
                 <button class="review-action-btn edit-btn"
                         onclick="updateReview(${reviewId})">
-                    수정완료
+                    編集完了
                 </button>
 
                 <button class="review-action-btn cancel-btn"
                         onclick="loadReviewList(currentAnimeId)">
-                    취소
+                    キャンセル
                 </button>
             </div>
         </div>
@@ -475,7 +475,7 @@ function updateReview(reviewId) {
     const content = document.getElementById(`editReviewContent-${reviewId}`).value.trim();
 
     if (content === "") {
-        alert("리뷰 내용을 입력해주세요.");
+        alert("レビュー内容を入力してください。");
         return;
     }
 
@@ -494,7 +494,7 @@ function updateReview(reviewId) {
         .then(response => response.text())
         .then(result => {
             if (result === "review updated") {
-                alert("리뷰가 수정되었습니다.");
+                alert("レビューが修正されました。");
 
                 loadAnimeDetail(currentAnimeId);
                 loadReviewList(currentAnimeId);
@@ -505,7 +505,7 @@ function updateReview(reviewId) {
         })
         .catch(error => {
             console.error("리뷰 수정 실패:", error);
-            alert("리뷰 수정 중 오류가 발생했습니다.");
+            alert("レビュー修正中にエラーが発生しました。");
         });
 }
 
@@ -513,7 +513,7 @@ function updateReview(reviewId) {
 // 리뷰 삭제 처리
 // =========================
 function deleteReview(reviewId) {
-    if (!confirm("리뷰를 삭제하시겠습니까?")) {
+    if (!confirm("レビューを削除しますか？")) {
         return;
     }
 
@@ -523,7 +523,7 @@ function deleteReview(reviewId) {
         .then(response => response.text())
         .then(result => {
             if (result === "review deleted") {
-                alert("리뷰가 삭제되었습니다.");
+                alert("レビューが削除されました。");
 
                 loadAnimeDetail(currentAnimeId);
                 loadReviewList(currentAnimeId);
@@ -534,7 +534,7 @@ function deleteReview(reviewId) {
         })
         .catch(error => {
             console.error("리뷰 삭제 실패:", error);
-            alert("리뷰 삭제 중 오류가 발생했습니다.");
+            alert("レビュー削除中にエラーが発生しました。");
         });
 }
 
@@ -589,7 +589,7 @@ function toggleReviewLike(reviewId) {
             }
 
             if (result === "login required" || result === "로그인이 필요합니다.") {
-                alert("로그인 후 이용해주세요.");
+                alert("ログイン後にご利用ください。");
                 location.href = "/login.html";
                 return;
             }
@@ -598,7 +598,7 @@ function toggleReviewLike(reviewId) {
         })
         .catch(error => {
             console.error("좋아요 처리 실패:", error);
-            alert("좋아요 처리 중 오류가 발생했습니다.");
+            alert("いいね処理中にエラーが発生しました。");
         });
 }
 
@@ -627,10 +627,10 @@ function getAnimeRatingText(anime) {
     const averageRating = Number(anime.averageRating || 0);
 
     if (reviewCount === 0) {
-        return "⭐ 아직 리뷰 없음";
+        return "⭐ レビューはまだありません";
     }
 
-    return `⭐ ${averageRating.toFixed(1)} / 리뷰 ${reviewCount}개`;
+    return `⭐ ${averageRating.toFixed(1)} / レビュー ${reviewCount}件`;
 }
 
 // =========================
@@ -638,18 +638,18 @@ function getAnimeRatingText(anime) {
 // =========================
 function genreIdToName(genreId) {
     if (genreId === 1) {
-        return "액션";
+        return "アクション";
     }
 
     if (genreId === 2) {
-        return "판타지";
+        return "ファンタジー";
     }
 
     if (genreId === 3) {
-        return "코미디";
+        return "コメディ";
     }
 
-    return "기타";
+    return "その他";
 }
 
 // =========================
@@ -723,7 +723,7 @@ function renderCommentList(reviewId, commentList) {
     const commentHeader = document.getElementById(`commentHeader-${reviewId}`);
 
     if (commentHeader !== null) {
-        commentHeader.textContent = `댓글 ${commentList.length}개`;
+        commentHeader.textContent = `コメント ${commentList.length}件`;
     }
 
     if (commentListBox === null) {
@@ -735,7 +735,7 @@ function renderCommentList(reviewId, commentList) {
     if (commentList.length === 0) {
         commentListBox.innerHTML = `
             <div class="empty-comment">
-                아직 댓글이 없습니다.
+                まだコメントがありません。
             </div>
         `;
         return;
@@ -762,7 +762,7 @@ function createCommentHtml(comment) {
             deleteButton = `
                 <button class="comment-delete-btn"
                         onclick="deleteComment(${comment.commentId}, ${comment.reviewId})">
-                    삭제
+                    削除
                 </button>
             `;
         }
@@ -771,7 +771,7 @@ function createCommentHtml(comment) {
     return `
         <div class="comment-top">
             <span class="comment-writer">
-                ${comment.writerName || "알 수 없음"}
+                ${comment.writerName || "不明"}
             </span>
 
             <span class="comment-date">
@@ -802,7 +802,7 @@ function insertComment(reviewId) {
     const content = commentInput.value.trim();
 
     if (content === "") {
-        alert("댓글 내용을 입력해주세요.");
+        alert("コメント内容を入力してください。");
         return;
     }
 
@@ -827,7 +827,7 @@ function insertComment(reviewId) {
             }
 
             if (result === "login required" || result === "로그인이 필요합니다.") {
-                alert("로그인 후 이용해주세요.");
+                alert("ログイン後にご利用ください。");
                 location.href = "/login.html";
                 return;
             }
@@ -836,7 +836,7 @@ function insertComment(reviewId) {
         })
         .catch(error => {
             console.error("댓글 등록 실패:", error);
-            alert("댓글 등록 중 오류가 발생했습니다.");
+            alert("コメント登録中にエラーが発生しました。");
         });
 }
 
@@ -844,7 +844,7 @@ function insertComment(reviewId) {
 // 댓글 삭제
 // =========================
 function deleteComment(commentId, reviewId) {
-    if (!confirm("댓글을 삭제하시겠습니까?")) {
+    if (!confirm("コメントを削除しますか？")) {
         return;
     }
 
@@ -862,6 +862,6 @@ function deleteComment(commentId, reviewId) {
         })
         .catch(error => {
             console.error("댓글 삭제 실패:", error);
-            alert("댓글 삭제 중 오류가 발생했습니다.");
+            alert("コメント削除中にエラーが発生しました。");
         });
 }

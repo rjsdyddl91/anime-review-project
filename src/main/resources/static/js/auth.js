@@ -25,7 +25,7 @@ function initLogin() {
         const password = document.getElementById("loginPassword").value.trim();
 
         if (email === "" || password === "") {
-            alert("이메일과 비밀번호를 입력해주세요.");
+            alert("メールアドレスとパスワードを入力してください。");
             return;
         }
 
@@ -44,7 +44,7 @@ function initLogin() {
             .then(response => response.text())
             .then(result => {
                 if (result === "login success") {
-                    alert("로그인되었습니다.");
+                    alert("ログインしました。");
                     location.href = "/index.html";
                     return;
                 }
@@ -53,7 +53,7 @@ function initLogin() {
             })
             .catch(error => {
                 console.error("로그인 실패:", error);
-                alert("로그인 중 오류가 발생했습니다.");
+                alert("ログイン中にエラーが発生しました。");
             });
     });
 }
@@ -96,12 +96,12 @@ function initJoin() {
         const password = document.getElementById("joinPassword").value.trim();
 
         if (name === "" || phone === "" || email === "" || password === "") {
-            alert("모든 항목을 입력해주세요.");
+            alert("すべての項目を入力してください。");
             return;
         }
 
         if (!joinEmailVerified || verifiedJoinEmail !== email) {
-            alert("이메일 인증을 완료해주세요.");
+            alert("メール認証を完了してください。");
             return;
         }
 
@@ -122,7 +122,7 @@ function initJoin() {
             .then(response => response.text())
             .then(result => {
                 if (result === "success") {
-                    alert("회원가입이 완료되었습니다.");
+                    alert("会員登録が完了しました。");
                     location.href = "/login.html";
                     return;
                 }
@@ -131,7 +131,7 @@ function initJoin() {
             })
             .catch(error => {
                 console.error("회원가입 실패:", error);
-                alert("회원가입 중 오류가 발생했습니다.");
+                alert("会員登録中にエラーが発生しました。");
             });
     });
 }
@@ -144,7 +144,7 @@ function sendJoinEmailCode() {
     const resultBox = document.getElementById("joinEmailAuthResult");
 
     if (email === "") {
-        alert("이메일을 입력해주세요.");
+        alert("メールアドレスを入力してください。");
         return;
     }
 
@@ -152,7 +152,7 @@ function sendJoinEmailCode() {
     verifiedJoinEmail = "";
 
     if (resultBox !== null) {
-        resultBox.textContent = "인증코드를 발송 중입니다...";
+        resultBox.textContent = "認証コードを送信中です...";
         resultBox.classList.remove("error");
     }
 
@@ -169,11 +169,11 @@ function sendJoinEmailCode() {
         .then(result => {
             if (result === "join code sent") {
                 if (resultBox !== null) {
-                    resultBox.textContent = "인증코드가 이메일로 발송되었습니다.";
+                    resultBox.textContent = "認証コードがメールで送信されました。";
                     resultBox.classList.remove("error");
                 }
 
-                alert("인증코드가 발송되었습니다.");
+                alert("認証コードを送信しました。");
                 return;
             }
 
@@ -188,11 +188,11 @@ function sendJoinEmailCode() {
             console.error("인증코드 발송 실패:", error);
 
             if (resultBox !== null) {
-                resultBox.textContent = "인증코드 발송 중 오류가 발생했습니다.";
+                resultBox.textContent = "認証コードの送信中にエラーが発生しました。";
                 resultBox.classList.add("error");
             }
 
-            alert("인증코드 발송 중 오류가 발생했습니다.");
+            alert("認証コードの送信中にエラーが発生しました。");
         });
 }
 
@@ -212,12 +212,12 @@ function verifyJoinEmailCode() {
         const resultBox = document.getElementById("joinEmailAuthResult");
 
         if (email === "") {
-            alert("이메일을 입력해주세요.");
+            alert("メールアドレスを入力してください。");
             return;
         }
 
         if (authCode === "") {
-            alert("인증코드를 입력해주세요.");
+            alert("認証コードを入力してください。");
             return;
         }
 
@@ -238,11 +238,11 @@ function verifyJoinEmailCode() {
                     verifiedJoinEmail = email;
 
                     if (resultBox !== null) {
-                        resultBox.textContent = "이메일 인증이 완료되었습니다.";
+                        resultBox.textContent = "メール認証が完了しました。";
                         resultBox.classList.remove("error");
                     }
 
-                    alert("이메일 인증이 완료되었습니다.");
+                    alert("メール認証が完了しました。");
                     return;
                 }
 
@@ -263,11 +263,11 @@ function verifyJoinEmailCode() {
                 verifiedJoinEmail = "";
 
                 if (resultBox !== null) {
-                    resultBox.textContent = "인증코드 확인 중 오류가 발생했습니다.";
+                    resultBox.textContent = "認証コードの確認中にエラーが発生しました。";
                     resultBox.classList.add("error");
                 }
 
-                alert("인증코드 확인 중 오류가 발생했습니다.");
+                alert("認証コードの確認中にエラーが発生しました。");
             });
     });
 }
@@ -289,7 +289,7 @@ function initFindPassword() {
         const resultBox = document.getElementById("findPasswordResult");
 
         if (name === "" || phone === "" || email === "") {
-            alert("이름, 전화번호, 이메일을 모두 입력해주세요.");
+            alert("名前、電話番号、メールアドレスをすべて入力してください。");
             return;
         }
 
@@ -309,9 +309,9 @@ function initFindPassword() {
             .then(response => response.text())
             .then(result => {
                 if (result === "temp password sent") {
-                    resultBox.textContent = "임시 비밀번호가 이메일로 발송되었습니다. 로그인 후 마이페이지에서 비밀번호를 변경해주세요.";
+                    resultBox.textContent = "仮パスワードがメールで送信されました。ログイン後、マイページでパスワードを変更してください。";
                     resultBox.classList.remove("error");
-                    alert("임시 비밀번호가 이메일로 발송되었습니다.");
+                    alert("仮パスワードがメールで送信されました。");
                     return;
                 }
 
@@ -320,7 +320,7 @@ function initFindPassword() {
             })
             .catch(error => {
                 console.error("비밀번호 찾기 실패:", error);
-                alert("비밀번호 찾기 중 오류가 발생했습니다.");
+                alert("パスワード確認中にエラーが発生しました。");
             });
     });
 }

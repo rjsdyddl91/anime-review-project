@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>관리자 페이지 - Anime Review</title>
+    <title>管理者ページ - Anime Review</title>
 
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -22,13 +22,13 @@
 
             <!-- 로그인 상태에 따라 common.js에서 변경 -->
             <nav class="nav" id="navMenu">
-                <a href="#" onclick="needLogin()">마이페이지</a>
+                <a href="#" onclick="needLogin()">マイページ</a>
             </nav>
 
             <!-- 로그인 / 로그아웃 영역 -->
             <div class="auth-area" id="authArea">
                 <button class="login-btn" onclick="location.href='/login.html'">
-                    로그인
+                    ログイン
                 </button>
             </div>
 
@@ -43,8 +43,8 @@
 
         <!-- 페이지 제목 -->
         <section class="admin-title">
-            <h1>관리자 페이지</h1>
-            <p>애니, 회원, 리뷰, 댓글을 관리할 수 있습니다.</p>
+            <h1>管理者ページ</h1>
+            <p>アニメ、会員、レビュー、コメントを管理できます。</p>
         </section>
 
         <!-- =========================
@@ -53,19 +53,19 @@
         <section class="admin-tab-area">
 
             <button class="admin-tab-btn active" onclick="showAdminSection('anime')">
-                애니 관리
+                アニメ管理
             </button>
 
             <button class="admin-tab-btn" onclick="showAdminSection('member')">
-                회원 관리
+                会員管理
             </button>
 
             <button class="admin-tab-btn" onclick="showAdminSection('review')">
-                리뷰 관리
+                レビュー管理
             </button>
 
             <button class="admin-tab-btn" onclick="showAdminSection('comment')">
-                댓글 관리
+                コメント管理
             </button>
 
         </section>
@@ -78,8 +78,8 @@
             <div class="admin-card">
 
                 <div class="admin-card-header">
-                    <h2>애니 등록 / 수정</h2>
-                    <p>애니 정보를 입력하고 등록하거나 수정할 수 있습니다.</p>
+                    <h2>アニメ登録 / 編集</h2>
+                    <p>アニメ情報を入力して、登録または編集できます。</p>
                 </div>
 
                 <!-- 애니 등록 / 수정 폼 -->
@@ -91,18 +91,18 @@
                     <div class="admin-form-row">
 
                         <div class="admin-form-group">
-                            <label for="adminAnimeTitle">제목</label>
-                            <input type="text" id="adminAnimeTitle" placeholder="애니 제목을 입력하세요">
+                            <label for="adminAnimeTitle">タイトル</label>
+                            <input type="text" id="adminAnimeTitle" placeholder="アニメタイトルを入力してください">
                         </div>
 
                         <div class="admin-form-group">
-                            <label for="adminAnimeGenreId">장르</label>
+                            <label for="adminAnimeGenreId">ジャンル</label>
 
                             <select id="adminAnimeGenreId">
-                                <option value="">장르를 선택하세요</option>
-                                <option value="1">액션</option>
-                                <option value="2">판타지</option>
-                                <option value="3">코미디</option>
+                                <option value="">ジャンルを選択してください</option>
+                                <option value="1">アクション</option>
+                                <option value="2">ファンタジー</option>
+                                <option value="3">コメディ</option>
                             </select>
                         </div>
 
@@ -111,30 +111,30 @@
                     <div class="admin-form-row">
 
                         <div class="admin-form-group">
-                            <label for="adminAnimeStudio">제작사</label>
-                            <input type="text" id="adminAnimeStudio" placeholder="제작사를 입력하세요">
+                            <label for="adminAnimeStudio">制作会社</label>
+                            <input type="text" id="adminAnimeStudio" placeholder="制作会社を入力してください">
                         </div>
 
                         <div class="admin-form-group">
-                            <label for="adminAnimeImagePath">이미지 경로</label>
-                            <input type="text" id="adminAnimeImagePath" placeholder="이미지 URL 또는 경로를 입력하세요">
+                            <label for="adminAnimeImagePath">画像パス</label>
+                            <input type="text" id="adminAnimeImagePath" placeholder="画像URLまたはパスを入力してください">
                         </div>
 
                     </div>
 
                     <div class="admin-form-group">
-                        <label for="adminAnimeDescription">줄거리</label>
-                        <textarea id="adminAnimeDescription" placeholder="애니 줄거리를 입력하세요"></textarea>
+                        <label for="adminAnimeDescription">あらすじ</label>
+                        <textarea id="adminAnimeDescription" placeholder="アニメのあらすじを入力してください"></textarea>
                     </div>
 
                     <div class="admin-form-button-area">
 
                         <button type="submit" class="admin-primary-btn" id="adminAnimeSubmitBtn">
-                            등록
+                            登録
                         </button>
 
                         <button type="button" class="admin-secondary-btn" onclick="resetAnimeForm()">
-                            입력 초기화
+                            入力をリセット
                         </button>
 
                     </div>
@@ -146,20 +146,20 @@
             <div class="admin-card">
 
                 <div class="admin-card-header">
-                    <h2>애니 목록</h2>
-                    <p>등록된 애니를 수정하거나 삭제할 수 있습니다.</p>
+                    <h2>アニメ一覧</h2>
+                    <p>登録されたアニメを編集または削除できます。</p>
                 </div>
 
                 <div class="admin-table-wrap">
                     <table class="admin-table admin-anime-table">
                         <thead>
                             <tr>
-                                <th class="col-no">번호</th>
-                                <th class="col-image">이미지</th>
-                                <th class="col-title">제목</th>
-                                <th class="col-genre">장르</th>
-                                <th class="col-studio">제작사</th>
-                                <th class="col-action">관리</th>
+                                <th class="col-no">番号</th>
+                                <th class="col-image">画像</th>
+                                <th class="col-title">タイトル</th>
+                                <th class="col-genre">ジャンル</th>
+                                <th class="col-studio">制作会社</th>
+                                <th class="col-action">管理</th>
                             </tr>
                         </thead>
 
@@ -184,27 +184,27 @@
             <div class="admin-card">
 
                 <div class="admin-card-header">
-                    <h2>회원 관리</h2>
-                    <p>가입한 회원 목록을 확인하고 삭제할 수 있습니다.</p>
+                    <h2>会員管理</h2>
+                    <p>登録された会員一覧を確認し、削除できます。</p>
                 </div>
 
                 <!-- 회원 검색 -->
                 <div class="admin-search-area">
                     <input type="text"
                            id="adminMemberSearchInput"
-                           placeholder="이름 / 이메일 / 전화번호 검색">
+                           placeholder="名前 / メールアドレス / 電話番号で検索">
                 </div>
 
                 <div class="admin-table-wrap">
                     <table class="admin-table admin-member-table">
                         <thead>
                             <tr>
-                                <th class="col-no">번호</th>
-                                <th class="col-name">이름</th>
-                                <th class="col-email">이메일</th>
-                                <th class="col-phone">전화번호</th>
-                                <th class="col-role">권한</th>
-                                <th class="col-action">관리</th>
+                                <th class="col-no">番号</th>
+                                <th class="col-name">名前</th>
+                                <th class="col-email">メールアドレス</th>
+                                <th class="col-phone">電話番号</th>
+                                <th class="col-role">権限</th>
+                                <th class="col-action">管理</th>
                             </tr>
                         </thead>
 
@@ -229,27 +229,27 @@
             <div class="admin-card">
 
                 <div class="admin-card-header">
-                    <h2>리뷰 관리</h2>
-                    <p>전체 리뷰 목록을 확인하고 삭제할 수 있습니다.</p>
+                    <h2>レビュー管理</h2>
+                    <p>すべてのレビュー一覧を確認し、削除できます。</p>
                 </div>
 
                 <!-- 리뷰 검색 -->
                 <div class="admin-search-area">
                     <input type="text"
                            id="adminReviewSearchInput"
-                           placeholder="작성자 / 리뷰 내용 검색">
+                           placeholder="投稿者 / レビュー内容で検索">
                 </div>
 
                 <div class="admin-table-wrap">
                     <table class="admin-table admin-review-table">
                         <thead>
                             <tr>
-                                <th class="col-no">번호</th>
-                                <th class="col-writer">작성자</th>
-                                <th class="col-rating">별점</th>
-                                <th class="col-content">내용</th>
-                                <th class="col-date">작성일</th>
-                                <th class="col-action">관리</th>
+                                <th class="col-no">番号</th>
+                                <th class="col-writer">投稿者</th>
+                                <th class="col-rating">評価</th>
+                                <th class="col-content">内容</th>
+                                <th class="col-date">投稿日</th>
+                                <th class="col-action">管理</th>
                             </tr>
                         </thead>
 
@@ -274,26 +274,26 @@
             <div class="admin-card">
 
                 <div class="admin-card-header">
-                    <h2>댓글 관리</h2>
-                    <p>전체 댓글 목록을 확인하고 삭제할 수 있습니다.</p>
+                    <h2>コメント管理</h2>
+                    <p>すべてのコメント一覧を確認し、削除できます。</p>
                 </div>
 
                 <!-- 댓글 검색 -->
                 <div class="admin-search-area">
                     <input type="text"
                            id="adminCommentSearchInput"
-                           placeholder="작성자 / 댓글 내용 검색">
+                           placeholder="投稿者 / コメント内容で検索">
                 </div>
 
                 <div class="admin-table-wrap">
                     <table class="admin-table admin-comment-table">
                         <thead>
                             <tr>
-                                <th class="col-no">번호</th>
-                                <th class="col-writer">작성자</th>
-                                <th class="col-content">내용</th>
-                                <th class="col-date">작성일</th>
-                                <th class="col-action">관리</th>
+                                <th class="col-no">番号</th>
+                                <th class="col-writer">投稿者</th>
+                                <th class="col-content">内容</th>
+                                <th class="col-date">投稿日</th>
+                                <th class="col-action">管理</th>
                             </tr>
                         </thead>
 

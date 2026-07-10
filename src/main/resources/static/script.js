@@ -4,20 +4,20 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => {
 
             if (!response.ok) {
-                throw new Error("HTTP 오류 : " + response.status);
+                throw new Error("HTTPエラー : " + response.status);
             }
 
             return response.json();
         })
         .then(data => {
 
-            console.log("애니 목록");
+            console.log("アニメ一覧");
             console.log(data);
 
         })
         .catch(error => {
 
-            console.error("애니 목록 불러오기 실패");
+            console.error("アニメ一覧の読み込みに失敗しました");
             console.error(error);
 
         });

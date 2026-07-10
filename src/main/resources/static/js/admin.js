@@ -10,6 +10,7 @@ let adminAnimeData = [];
 let adminMemberData = [];
 let adminReviewData = [];
 let adminCommentData = [];
+
 // =========================
 // 관리자 검색어
 // =========================
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initReviewSearch();
     initCommentSearch();
 });
+
 // =========================
 // 관리자 권한 확인
 // =========================
@@ -48,7 +50,7 @@ function checkAdminUser() {
         .then(response => response.text())
         .then(text => {
             if (text === "" || text === "null") {
-                alert("로그인 후 이용해주세요.");
+                alert("ログイン後にご利用ください。");
                 location.href = "/login.html";
                 return;
             }
@@ -56,7 +58,7 @@ function checkAdminUser() {
             const loginUser = JSON.parse(text);
 
             if (loginUser.role !== "ADMIN") {
-                alert("관리자만 접근할 수 있습니다.");
+                alert("管理者のみアクセスできます。");
                 location.href = "/index.html";
                 return;
             }
@@ -68,7 +70,7 @@ function checkAdminUser() {
         })
         .catch(error => {
             console.error("관리자 권한 확인 실패:", error);
-            alert("관리자 정보를 확인하지 못했습니다.");
+            alert("管理者情報を確認できませんでした。");
             location.href = "/index.html";
         });
 }
@@ -215,7 +217,7 @@ function renderAdminAnimeList() {
     if (adminAnimeData.length === 0) {
         adminAnimeList.innerHTML = `
             <tr>
-                <td colspan="6">등록된 애니가 없습니다.</td>
+                <td colspan="6">登録されたアニメがありません。</td>
             </tr>
         `;
 
@@ -259,12 +261,12 @@ function renderAdminAnimeList() {
             <td class="col-action">
                 <button class="admin-small-btn edit"
                         onclick="setAnimeUpdateForm(${anime.animeId})">
-                    수정
+                    編集
                 </button>
 
                 <button class="admin-small-btn delete"
                         onclick="deleteAnime(${anime.animeId})">
-                    삭제
+                    削除
                 </button>
             </td>
         `;
@@ -305,7 +307,7 @@ function insertAnime() {
         .then(response => response.text())
         .then(result => {
             if (result === "anime inserted") {
-                alert("애니가 등록되었습니다.");
+                alert("アニメが登録されました。");
                 resetAnimeForm();
                 loadAdminAnimeList();
             } else {
@@ -314,7 +316,7 @@ function insertAnime() {
         })
         .catch(error => {
             console.error("애니 등록 실패:", error);
-            alert("애니 등록 중 오류가 발생했습니다.");
+            alert("アニメ登録中にエラーが発生しました。");
         });
 }
 
@@ -332,7 +334,7 @@ function setAnimeUpdateForm(animeId) {
             document.getElementById("adminAnimeImagePath").value = anime.imagePath;
             document.getElementById("adminAnimeDescription").value = anime.description;
 
-            document.getElementById("adminAnimeSubmitBtn").textContent = "수정";
+            document.getElementById("adminAnimeSubmitBtn").textContent = "編集";
 
             window.scrollTo({
                 top: 0,
@@ -341,7 +343,7 @@ function setAnimeUpdateForm(animeId) {
         })
         .catch(error => {
             console.error("애니 상세 조회 실패:", error);
-            alert("애니 정보를 불러오지 못했습니다.");
+            alert("アニメ情報を読み込めませんでした。");
         });
 }
 
@@ -365,7 +367,7 @@ function updateAnime(animeId) {
         .then(response => response.text())
         .then(result => {
             if (result === "anime updated") {
-                alert("애니가 수정되었습니다.");
+                alert("アニメが修正されました。");
                 resetAnimeForm();
                 loadAdminAnimeList();
             } else {
@@ -374,7 +376,7 @@ function updateAnime(animeId) {
         })
         .catch(error => {
             console.error("애니 수정 실패:", error);
-            alert("애니 수정 중 오류가 발생했습니다.");
+            alert("アニメ修正中にエラーが発生しました。");
         });
 }
 
@@ -382,7 +384,7 @@ function updateAnime(animeId) {
 // 애니 삭제
 // =========================
 function deleteAnime(animeId) {
-    if (!confirm("정말 이 애니를 삭제하시겠습니까?")) {
+    if (!confirm("本当にこのアニメを削除しますか？")) {
         return;
     }
 
@@ -392,7 +394,7 @@ function deleteAnime(animeId) {
         .then(response => response.text())
         .then(result => {
             if (result === "anime deleted") {
-                alert("애니가 삭제되었습니다.");
+                alert("アニメが削除されました。");
                 loadAdminAnimeList();
             } else {
                 alert(result);
@@ -400,7 +402,7 @@ function deleteAnime(animeId) {
         })
         .catch(error => {
             console.error("애니 삭제 실패:", error);
-            alert("애니 삭제 중 오류가 발생했습니다.");
+            alert("アニメ削除中にエラーが発生しました。");
         });
 }
 
@@ -415,27 +417,27 @@ function getAnimeFormData() {
     const description = document.getElementById("adminAnimeDescription").value.trim();
 
     if (title === "") {
-        alert("제목을 입력해주세요.");
+        alert("タイトルを入力してください。");
         return null;
     }
 
     if (genreId === "") {
-        alert("장르를 선택해주세요.");
+        alert("ジャンルを選択してください。");
         return null;
     }
 
     if (studio === "") {
-        alert("제작사를 입력해주세요.");
+        alert("制作会社を入力してください。");
         return null;
     }
 
     if (imagePath === "") {
-        alert("이미지 경로를 입력해주세요.");
+        alert("画像パスを入力してください。");
         return null;
     }
 
     if (description === "") {
-        alert("줄거리를 입력해주세요.");
+        alert("あらすじを入力してください。");
         return null;
     }
 
@@ -459,7 +461,7 @@ function resetAnimeForm() {
     document.getElementById("adminAnimeImagePath").value = "";
     document.getElementById("adminAnimeDescription").value = "";
 
-    document.getElementById("adminAnimeSubmitBtn").textContent = "등록";
+    document.getElementById("adminAnimeSubmitBtn").textContent = "登録";
 }
 
 // =========================
@@ -497,7 +499,7 @@ function renderAdminMemberList() {
     if (filteredMemberList.length === 0) {
         adminMemberList.innerHTML = `
             <tr>
-                <td colspan="6">검색 결과가 없습니다.</td>
+                <td colspan="6">検索結果がありません。</td>
             </tr>
         `;
 
@@ -528,13 +530,13 @@ function renderAdminMemberList() {
         let deleteButton = `
             <button class="admin-small-btn delete"
                     onclick="deleteMember(${member.memberId})">
-                삭제
+                削除
             </button>
         `;
 
         if (currentAdminUser !== null && currentAdminUser.memberId === member.memberId) {
             deleteButton = `
-                <span class="admin-me-label">현재 관리자</span>
+                <span class="admin-me-label">現在の管理者</span>
             `;
         }
 
@@ -586,7 +588,7 @@ function getFilteredMemberList() {
 // 회원 삭제
 // =========================
 function deleteMember(memberId) {
-    if (!confirm("정말 이 회원을 삭제하시겠습니까?")) {
+    if (!confirm("本当にこの会員を削除しますか？")) {
         return;
     }
 
@@ -596,7 +598,7 @@ function deleteMember(memberId) {
         .then(response => response.text())
         .then(result => {
             if (result === "member deleted") {
-                alert("회원이 삭제되었습니다.");
+                alert("会員が削除されました。");
                 loadAdminMemberList();
             } else {
                 alert(result);
@@ -604,7 +606,7 @@ function deleteMember(memberId) {
         })
         .catch(error => {
             console.error("회원 삭제 실패:", error);
-            alert("회원 삭제 중 오류가 발생했습니다.");
+            alert("会員削除中にエラーが発生しました。");
         });
 }
 
@@ -643,7 +645,7 @@ function renderAdminReviewList() {
     if (filteredReviewList.length === 0) {
         adminReviewList.innerHTML = `
             <tr>
-                <td colspan="6">검색 결과가 없습니다.</td>
+                <td colspan="6">検索結果がありません。</td>
             </tr>
         `;
 
@@ -681,7 +683,7 @@ function renderAdminReviewList() {
             <td class="col-action">
                 <button class="admin-small-btn delete"
                         onclick="deleteReview(${review.reviewId})">
-                    삭제
+                    削除
                 </button>
             </td>
         `;
@@ -723,7 +725,7 @@ function getFilteredReviewList() {
 // 리뷰 삭제
 // =========================
 function deleteReview(reviewId) {
-    if (!confirm("정말 이 리뷰를 삭제하시겠습니까?")) {
+    if (!confirm("本当にこのレビューを削除しますか？")) {
         return;
     }
 
@@ -733,7 +735,7 @@ function deleteReview(reviewId) {
         .then(response => response.text())
         .then(result => {
             if (result === "review deleted") {
-                alert("리뷰가 삭제되었습니다.");
+                alert("レビューが削除されました。");
                 loadAdminReviewList();
             } else {
                 alert(result);
@@ -741,7 +743,7 @@ function deleteReview(reviewId) {
         })
         .catch(error => {
             console.error("리뷰 삭제 실패:", error);
-            alert("리뷰 삭제 중 오류가 발생했습니다.");
+            alert("レビュー削除中にエラーが発生しました。");
         });
 }
 
@@ -780,7 +782,7 @@ function renderAdminCommentList() {
     if (filteredCommentList.length === 0) {
         adminCommentList.innerHTML = `
             <tr>
-                <td colspan="5">검색 결과가 없습니다.</td>
+                <td colspan="5">検索結果がありません。</td>
             </tr>
         `;
 
@@ -817,7 +819,7 @@ function renderAdminCommentList() {
             <td class="col-action">
                 <button class="admin-small-btn delete"
                         onclick="deleteComment(${comment.commentId})">
-                    삭제
+                    削除
                 </button>
             </td>
         `;
@@ -859,7 +861,7 @@ function getFilteredCommentList() {
 // 댓글 삭제
 // =========================
 function deleteComment(commentId) {
-    if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+    if (!confirm("本当にこのコメントを削除しますか？")) {
         return;
     }
 
@@ -869,7 +871,7 @@ function deleteComment(commentId) {
         .then(response => response.text())
         .then(result => {
             if (result === "comment deleted") {
-                alert("댓글이 삭제되었습니다.");
+                alert("コメントが削除されました。");
                 loadAdminCommentList();
             } else {
                 alert(result);
@@ -877,7 +879,7 @@ function deleteComment(commentId) {
         })
         .catch(error => {
             console.error("댓글 삭제 실패:", error);
-            alert("댓글 삭제 중 오류가 발생했습니다.");
+            alert("コメント削除中にエラーが発生しました。");
         });
 }
 
@@ -919,7 +921,7 @@ function renderAdminPagination(totalCount, pageSize, currentPage, paginationId, 
     // 이전 버튼
     const prevBtn = document.createElement("button");
     prevBtn.className = "page-btn";
-    prevBtn.textContent = "이전";
+    prevBtn.textContent = "前へ";
     prevBtn.disabled = currentPage === 1;
 
     prevBtn.onclick = () => {
@@ -950,7 +952,7 @@ function renderAdminPagination(totalCount, pageSize, currentPage, paginationId, 
     // 다음 버튼
     const nextBtn = document.createElement("button");
     nextBtn.className = "page-btn";
-    nextBtn.textContent = "다음";
+    nextBtn.textContent = "次へ";
     nextBtn.disabled = currentPage === totalPage;
 
     nextBtn.onclick = () => {
@@ -1011,18 +1013,18 @@ function genreIdToName(genreId) {
     genreId = Number(genreId);
 
     if (genreId === 1) {
-        return "액션";
+        return "アクション";
     }
 
     if (genreId === 2) {
-        return "판타지";
+        return "ファンタジー";
     }
 
     if (genreId === 3) {
-        return "코미디";
+        return "コメディ";
     }
 
-    return "기타";
+    return "その他";
 }
 
 // =========================

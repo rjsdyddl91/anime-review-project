@@ -121,7 +121,7 @@ function renderSearchSuggestions(animeList) {
     if (animeList.length === 0) {
         searchSuggestionBox.innerHTML = `
             <div class="search-suggestion-empty">
-                검색 결과가 없습니다.
+                検索結果がありません。
             </div>
         `;
 
@@ -193,7 +193,7 @@ function renderCurrentAnimePage() {
     if (currentAnimeList.length === 0) {
         animeGrid.innerHTML = `
             <div class="empty-message">
-                표시할 애니가 없습니다.
+                表示するアニメがありません。
             </div>
         `;
 
@@ -260,7 +260,7 @@ function renderAnimePagination() {
     // 이전 버튼
     const prevBtn = document.createElement("button");
     prevBtn.className = "page-btn";
-    prevBtn.textContent = "이전";
+    prevBtn.textContent = "前へ";
     prevBtn.disabled = currentPage === 1;
 
     prevBtn.onclick = () => {
@@ -295,7 +295,7 @@ function renderAnimePagination() {
     // 다음 버튼
     const nextBtn = document.createElement("button");
     nextBtn.className = "page-btn";
-    nextBtn.textContent = "다음";
+    nextBtn.textContent = "次へ";
     nextBtn.disabled = currentPage === totalPage;
 
     nextBtn.onclick = () => {
@@ -489,10 +489,10 @@ function getAnimeRatingText(anime) {
     const averageRating = Number(anime.averageRating || 0);
 
     if (reviewCount === 0) {
-        return "⭐ 아직 리뷰 없음";
+        return "⭐ レビューはまだありません";
     }
 
-    return `⭐ ${averageRating.toFixed(1)} / 리뷰 ${reviewCount}개`;
+    return `⭐ ${averageRating.toFixed(1)} / レビュー ${reviewCount}件`;
 }
 
 // =========================
@@ -500,18 +500,18 @@ function getAnimeRatingText(anime) {
 // =========================
 function genreIdToName(genreId) {
     if (genreId === 1) {
-        return "액션";
+        return "アクション";
     }
 
     if (genreId === 2) {
-        return "판타지";
+        return "ファンタジー";
     }
 
     if (genreId === 3) {
-        return "코미디";
+        return "コメディ";
     }
 
-    return "기타";
+    return "その他";
 }
 
 // =========================

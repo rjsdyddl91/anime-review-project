@@ -36,14 +36,14 @@ function renderGuestHeader() {
 
     if (nav !== null) {
         nav.innerHTML = `
-            <a href="#" onclick="needLogin()">마이페이지</a>
+            <a href="#" onclick="needLogin()">マイページ</a>
         `;
     }
 
     if (authArea !== null) {
         authArea.innerHTML = `
             <button class="login-btn" onclick="location.href='/login.html'">
-                로그인
+                ログイン
             </button>
         `;
     }
@@ -63,8 +63,8 @@ function renderLoginHeader(loginUser) {
         // =========================
         if (loginUser.role === "ADMIN") {
             nav.innerHTML = `
-                <a href="/admin.html">관리자페이지</a>
-                <a href="/mypage.html">마이페이지</a>
+                <a href="/admin.html">管理者ページ</a>
+                <a href="/mypage.html">マイページ</a>
             `;
         }
 
@@ -73,16 +73,16 @@ function renderLoginHeader(loginUser) {
         // =========================
         else {
             nav.innerHTML = `
-                <a href="/mypage.html">마이페이지</a>
+                <a href="/mypage.html">マイページ</a>
             `;
         }
     }
 
     if (authArea !== null) {
         authArea.innerHTML = `
-            <span class="user-name">${loginUser.name}님</span>
+            <span class="user-name">${loginUser.name}さん</span>
             <button class="logout-btn" onclick="logout()">
-                로그아웃
+                ログアウト
             </button>
         `;
     }
@@ -99,7 +99,7 @@ function logout() {
         .then(result => {
             if (result === "logout success") {
                 currentLoginUser = null;
-                alert("로그아웃되었습니다.");
+                alert("ログアウトしました。");
                 location.href = "/index.html";
                 return;
             }
@@ -108,7 +108,7 @@ function logout() {
         })
         .catch(error => {
             console.error("로그아웃 실패:", error);
-            alert("로그아웃 중 오류가 발생했습니다.");
+            alert("ログアウト中にエラーが発生しました。");
         });
 }
 
@@ -116,6 +116,6 @@ function logout() {
 // 로그인 필요 안내
 // =========================
 function needLogin() {
-    alert("로그인 후 이용해주세요.");
+    alert("ログイン後にご利用ください。");
     location.href = "/login.html";
 }

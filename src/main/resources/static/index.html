@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>Anime Review</title>
@@ -22,13 +22,13 @@
 
             <!-- 로그인 상태에 따라 common.js에서 변경 -->
             <nav class="nav" id="navMenu">
-                <a href="#" onclick="needLogin()">마이페이지</a>
+                <a href="#" onclick="needLogin()">マイページ</a>
             </nav>
 
             <!-- 로그인 / 로그아웃 영역 -->
             <div class="auth-area" id="authArea">
                 <button class="login-btn" onclick="location.href='/login.html'">
-                    로그인
+                    ログイン
                 </button>
             </div>
 
@@ -43,8 +43,8 @@
 
         <!-- 제목 -->
         <section class="main-title">
-            <h1>애니메이션 리뷰</h1>
-            <p>좋아하는 애니를 찾고 리뷰를 남겨보세요.</p>
+            <h1>アニメレビュー</h1>
+            <p>好きなアニメを探して、レビューを投稿してみましょう。</p>
         </section>
 
         <!-- =========================
@@ -55,10 +55,10 @@
             <div class="search-box">
 
                 <!-- 검색 입력창 -->
-                <input type="text" id="searchInput" placeholder="애니 제목을 검색하세요">
+                <input type="text" id="searchInput" placeholder="アニメタイトルを検索">
 
                 <!-- 검색 버튼 -->
-                <button id="searchBtn">검색</button>
+                <button id="searchBtn">検索</button>
 
                 <!-- 검색 자동완성 목록 -->
                 <div class="search-suggestion-box" id="searchSuggestionBox">
@@ -73,19 +73,19 @@
              장르 탭
         ========================= -->
         <section class="genre-tabs">
-            <button class="genre-btn active" data-genre="all">전체</button>
-            <button class="genre-btn" data-genre="1">액션</button>
-            <button class="genre-btn" data-genre="2">판타지</button>
-            <button class="genre-btn" data-genre="3">코미디</button>
+            <button class="genre-btn active" data-genre="all">すべて</button>
+            <button class="genre-btn" data-genre="1">アクション</button>
+            <button class="genre-btn" data-genre="2">ファンタジー</button>
+            <button class="genre-btn" data-genre="3">コメディ</button>
         </section>
 
         <!-- =========================
              정렬 버튼
         ========================= -->
         <section class="sort-tabs">
-            <button class="sort-btn active" data-sort="default">기본순</button>
-            <button class="sort-btn" data-sort="rating">별점순</button>
-            <button class="sort-btn" data-sort="review">리뷰 많은 순</button>
+            <button class="sort-btn active" data-sort="default">標準順</button>
+            <button class="sort-btn" data-sort="rating">評価順</button>
+            <button class="sort-btn" data-sort="review">レビュー数順</button>
         </section>
 
         <!-- =========================

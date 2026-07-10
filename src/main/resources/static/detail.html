@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>Anime Detail</title>
@@ -16,11 +16,11 @@
 
         <div class="header-right">
             <nav class="nav" id="navMenu">
-                <a href="#" onclick="needLogin()">마이페이지</a>
+                <a href="#" onclick="needLogin()">マイページ</a>
             </nav>
 
             <div class="auth-area" id="authArea">
-                <button class="login-btn" onclick="location.href='/login.html'">로그인</button>
+                <button class="login-btn" onclick="location.href='/login.html'">ログイン</button>
             </div>
         </div>
 
@@ -29,7 +29,7 @@
     <main class="detail-main">
 
         <button class="back-btn" onclick="location.href='/index.html'">
-            ← 목록으로
+            ← 一覧へ戻る
         </button>
 
         <section class="detail-card">
@@ -39,35 +39,35 @@
             </div>
 
             <div class="detail-info-box">
-                <div id="detailGenre" class="detail-genre">장르</div>
+                <div id="detailGenre" class="detail-genre">ジャンル</div>
 
                 <div class="detail-title-row">
-                    <h1 id="detailTitle" class="detail-title">애니 제목</h1>
+                    <h1 id="detailTitle" class="detail-title">アニメタイトル</h1>
 
                     <button id="bookmarkBtn" class="bookmark-btn">
-                        ♡ 북마크
+                        ♡ ブックマーク
                     </button>
                 </div>
 
                 <!-- 평균 별점 -->
                 <div id="detailRating" class="detail-rating">
-                    ⭐ 아직 리뷰 없음
+                    ⭐ レビューはまだありません
                 </div>
 
                 <div class="detail-meta">
-                    <span>제작사</span>
+                    <span>制作会社</span>
                     <strong id="detailStudio">-</strong>
                 </div>
 
                 <div class="detail-meta">
-                    <span>등록일</span>
+                    <span>登録日</span>
                     <strong id="detailCreatedAt">-</strong>
                 </div>
 
                 <div class="detail-description-box">
-                    <h3>작품 소개</h3>
+                    <h3>作品紹介</h3>
                     <p id="detailDescription">
-                        작품 설명이 표시됩니다.
+                        作品説明が表示されます。
                     </p>
                 </div>
             </div>
@@ -77,15 +77,15 @@
         <section class="review-section">
 
             <div class="review-header">
-                <h2>리뷰</h2>
-                <span id="reviewCount">0개</span>
+                <h2>レビュー</h2>
+                <span id="reviewCount">0件</span>
             </div>
 
             <div class="review-write-box">
-                <h3>리뷰 작성</h3>
+                <h3>レビューを書く</h3>
 
                 <div class="review-form-row">
-                    <label>별점</label>
+                    <label>評価</label>
 
                     <div class="star-rating" id="starRating">
                         <span class="star" data-value="1">☆</span>
@@ -96,10 +96,10 @@
                     </div>
                 </div>
 
-                <textarea id="reviewContent" placeholder="로그인 후 리뷰를 작성할 수 있습니다."></textarea>
+                <textarea id="reviewContent" placeholder="ログイン後、レビューを投稿できます。"></textarea>
 
                 <button id="reviewSubmitBtn" class="review-submit-btn">
-                    리뷰 등록
+                    レビューを投稿
                 </button>
             </div>
 
